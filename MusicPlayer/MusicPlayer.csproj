@@ -12,4 +12,9 @@
       <Folder Include="Tracks\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="GeniusAPI" Version="1.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+    </ItemGroup>
+
 </Project>

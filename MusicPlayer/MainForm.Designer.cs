@@ -30,6 +30,7 @@ partial class MainForm
     private void InitializeComponent()
     {
         btnMainFormUploadFile = new System.Windows.Forms.Button();
+        btnMainFormFindLyrics = new System.Windows.Forms.Button();
         SuspendLayout();
         // 
         // btnMainFormUploadFile
@@ -42,15 +43,28 @@ partial class MainForm
         btnMainFormUploadFile.UseVisualStyleBackColor = true;
         btnMainFormUploadFile.Click += btnMainFormUploadFile_Click;
         // 
+        // btnMainFormFindLyrics
+        // 
+        btnMainFormFindLyrics.Location = new System.Drawing.Point(406, 456);
+        btnMainFormFindLyrics.Name = "btnMainFormFindLyrics";
+        btnMainFormFindLyrics.Size = new System.Drawing.Size(99, 58);
+        btnMainFormFindLyrics.TabIndex = 1;
+        btnMainFormFindLyrics.Text = "Find lyrics";
+        btnMainFormFindLyrics.UseVisualStyleBackColor = true;
+        btnMainFormFindLyrics.Click += btnMainFormFindLyrics_Click;
+        // 
         // MainForm
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         ClientSize = new System.Drawing.Size(630, 597);
+        Controls.Add(btnMainFormFindLyrics);
         Controls.Add(btnMainFormUploadFile);
-        Text = "Form1";
+        Text = "MainForm";
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.Button btnMainFormFindLyrics;
 
     private System.Windows.Forms.Button btnMainFormUploadFile;
 
