@@ -6,8 +6,11 @@ public class Performer
     
     public string? Name { get; set; }
 
+    public string? UpperName { get; set; }
+
     public Performer(string name)
     {
         Name = name;
+        UpperName = name.ToUpper();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace MusicPlayer;
 
-partial class MainForm
+partial class MainForm : Form
 {
     /// <summary>
     ///  Required designer variable.
@@ -29,44 +29,27 @@ partial class MainForm
     /// </summary>
     private void InitializeComponent()
     {
-        btnMainFormUploadFile = new System.Windows.Forms.Button();
-        btnMainFormFindLyrics = new System.Windows.Forms.Button();
+        btnMainFormUpload = new System.Windows.Forms.Button();
         SuspendLayout();
         // 
-        // btnMainFormUploadFile
+        // btnMainFormUpload
         // 
-        btnMainFormUploadFile.Location = new System.Drawing.Point(190, 456);
-        btnMainFormUploadFile.Name = "btnMainFormUploadFile";
-        btnMainFormUploadFile.Size = new System.Drawing.Size(149, 59);
-        btnMainFormUploadFile.TabIndex = 0;
-        btnMainFormUploadFile.Text = "Upload file";
-        btnMainFormUploadFile.UseVisualStyleBackColor = true;
-        btnMainFormUploadFile.Click += btnMainFormUploadFile_Click;
-        // 
-        // btnMainFormFindLyrics
-        // 
-        btnMainFormFindLyrics.Location = new System.Drawing.Point(406, 456);
-        btnMainFormFindLyrics.Name = "btnMainFormFindLyrics";
-        btnMainFormFindLyrics.Size = new System.Drawing.Size(99, 58);
-        btnMainFormFindLyrics.TabIndex = 1;
-        btnMainFormFindLyrics.Text = "Find lyrics";
-        btnMainFormFindLyrics.UseVisualStyleBackColor = true;
-        btnMainFormFindLyrics.Click += btnMainFormFindLyrics_Click;
+        btnMainFormUpload.Location = new System.Drawing.Point(118, 101);
+        btnMainFormUpload.Name = "btnMainFormUpload";
+        btnMainFormUpload.Size = new System.Drawing.Size(96, 98);
+        btnMainFormUpload.TabIndex = 0;
+        btnMainFormUpload.Text = "Upload";
+        btnMainFormUpload.UseVisualStyleBackColor = true;
+        btnMainFormUpload.Click += btnMainFormUpload_Click;
         // 
         // MainForm
         // 
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-        AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(630, 597);
-        Controls.Add(btnMainFormFindLyrics);
-        Controls.Add(btnMainFormUploadFile);
-        Text = "MainForm";
+        ClientSize = new System.Drawing.Size(284, 261);
+        Controls.Add(btnMainFormUpload);
         ResumeLayout(false);
     }
-
-    private System.Windows.Forms.Button btnMainFormFindLyrics;
-
-    private System.Windows.Forms.Button btnMainFormUploadFile;
+    
+    private System.Windows.Forms.Button btnMainFormUpload;
 
     #endregion
 }
