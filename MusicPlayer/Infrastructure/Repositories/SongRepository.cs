@@ -13,9 +13,14 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public async Task AddAsync(Song entity)
+    public void Add(Song entity)
     {
         _context.Songs.Add(entity);
-        await _context.SaveChangesAsync();
+        _context.SaveChangesAsync();
+    }
+
+    public bool Contains(string title)
+    {
+        return _context.Songs.Any(s => s.Title == title);
     }
 }

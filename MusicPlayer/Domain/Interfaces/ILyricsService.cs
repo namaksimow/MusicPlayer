@@ -2,5 +2,5 @@
 
 public interface ILyricsService
 {
-    Task<string?> GetLyrics(string track, string artist);
+    Task<string> GetLyrics(string track, string artist);
 }

@@ -12,9 +12,9 @@ public class LyricsService :  ILyricsService
         _geniusClient = geniusClient;
     }
 
-    public async Task<string?> GetLyrics(string artist, string title)
+    public async Task<string> GetLyrics(string artist, string title)
     {
-        var trackInfo = await _geniusClient.GetTrackInfoAsync(artist, title);
+        var trackInfo = await _geniusClient.GetTrackInfoAsync(title, artist);
 
         if (trackInfo != null)
         {

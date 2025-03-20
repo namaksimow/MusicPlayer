@@ -1,44 +1,51 @@
 ﻿using MusicPlayer.DataBase.Models;
 using MusicPlayer.Domain.Interfaces;
+using MusicPlayer.UI.Forms;
 
 namespace MusicPlayer.Application.Services;
 
 public class SongService : ISongService 
 {
     private readonly IFileStorageService _fileStorage;
-    private readonly IDurationService _metadataService;
+    private readonly IDurationService _durationService;
     private readonly ILyricsService _lyricsService;
     private readonly ITagService _tagService;
     private readonly ISongRepository _songRepository;
+    private readonly IGenreRepository _genreRepository;
 
-    public SongService(IFileStorageService fileStorage, IDurationService metadataService, 
+    public SongService(IFileStorageService fileStorage, IDurationService durationService, 
         ILyricsService lyricsService, ITagService tagService, 
-        ISongRepository songRepository)
+        ISongRepository songRepository, IGenreRepository genreRepository)
     {
         _fileStorage = fileStorage;
-        _metadataService = metadataService;
+        _durationService = durationService;
         _lyricsService = lyricsService;
         _tagService = tagService;
         _songRepository = songRepository;
+        _genreRepository = genreRepository;
     }
 
     public async Task AddSong(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
-        (string artist, string title) = ParseFileName(filePath);
-        Console.WriteLine("qwerqwer");
-        Console.WriteLine(artist);
-        Console.WriteLine(title);
+        (string artist, string title) = ParseFileName(fileName);
+
+        if (!_songRepository.Contains(title))
+        {
+            string newFilePath = _fileStorage.SaveFile(filePath);
+            int duration = _durationService.GetDuration(newFilePath);
+            string? lyrics = await _lyricsService.GetLyrics(artist, title);
+            var tags = await _tagService.GetTags(artist, title);
+            _genreRepository.Add(tags);
         
-        /*string newFilePath = _fileStorage.SaveFile(filePath);
-        int duration = _metadataService.GetDuration(newFilePath);
-        string? lyrics = await _lyricsService.GetLyrics(artist, title);
-        var tags = await _tagService.GetTags(artist, title);
-
-        Song song = new Song(title, duration, lyrics);
-        */
-
-        /*await _songRepository.AddAsync(song);*/
+            Song song = new Song(title, duration, lyrics);
+            _songRepository.Add(song);    
+            MessageBox.Show("Song added");
+        }
+        else
+        {
+            MessageBox.Show("Song exist");    
+        }
     }
 
     private (string artist, string title) ParseFileName(string fileName)

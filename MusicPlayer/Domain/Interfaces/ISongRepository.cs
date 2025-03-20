@@ -4,5 +4,6 @@ namespace MusicPlayer.Domain.Interfaces;
 
 public interface ISongRepository
 {
-    Task AddAsync(Song entity);
+    void Add(Song entity);
+    bool Contains(string title);
 }

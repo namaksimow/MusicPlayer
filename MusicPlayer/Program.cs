@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MusicPlayer.Application.Services;
 using MusicPlayer.Domain.Interfaces;
 using MusicPlayer.Infrastructure.Repositories;
+using MusicPlayer.UI.Forms;
 using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
 
 namespace MusicPlayer;
@@ -21,8 +22,8 @@ static class Program
         var services = ConfigureServices();
         using var serviceProvider = services.BuildServiceProvider();
             
-        var mainForm = serviceProvider.GetRequiredService<MainForm>();
-        System.Windows.Forms.Application.Run(mainForm);
+        var main = serviceProvider.GetRequiredService<Main>();
+        System.Windows.Forms.Application.Run(main);
     }
     
     private static IServiceCollection ConfigureServices()
@@ -43,7 +44,8 @@ static class Program
         services.AddScoped<ILyricsService, LyricsService>();
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<ISongRepository, SongRepository>();
-        services.AddScoped<MainForm>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<Main>();
 
         return services;
     }
