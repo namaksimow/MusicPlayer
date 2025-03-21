@@ -1,6 +1,5 @@
-﻿using MusicPlayer.DataBase.Models;
+﻿using MusicPlayer.Domain.Models;
 using MusicPlayer.Domain.Interfaces;
-using MusicPlayer.UI.Forms;
 
 namespace MusicPlayer.Application.Services;
 
@@ -12,10 +11,15 @@ public class SongService : ISongService
     private readonly ITagService _tagService;
     private readonly ISongRepository _songRepository;
     private readonly IGenreRepository _genreRepository;
+    private readonly IPerformerRepository _performerRepository;
+    private readonly IGenreSetRepository _genreSetRepository;
+    private readonly IPerformerSetRepository _performerSetRepository;
 
     public SongService(IFileStorageService fileStorage, IDurationService durationService, 
         ILyricsService lyricsService, ITagService tagService, 
-        ISongRepository songRepository, IGenreRepository genreRepository)
+        ISongRepository songRepository, IGenreRepository genreRepository,
+        IPerformerRepository performerRepository, IGenreSetRepository genreSetRepository,
+        IPerformerSetRepository performerSetRepository)
     {
         _fileStorage = fileStorage;
         _durationService = durationService;
@@ -23,6 +27,9 @@ public class SongService : ISongService
         _tagService = tagService;
         _songRepository = songRepository;
         _genreRepository = genreRepository;
+        _performerRepository = performerRepository;
+        _genreSetRepository = genreSetRepository;
+        _performerSetRepository = performerSetRepository;
     }
 
     public async Task AddSong(string filePath)
@@ -34,17 +41,24 @@ public class SongService : ISongService
         {
             string newFilePath = _fileStorage.SaveFile(filePath);
             int duration = _durationService.GetDuration(newFilePath);
-            string? lyrics = await _lyricsService.GetLyrics(artist, title);
+            string lyrics = await _lyricsService.GetLyrics(artist, title);
+            
             var tags = await _tagService.GetTags(artist, title);
-            _genreRepository.Add(tags);
+            await _genreRepository.Add(tags);
         
             Song song = new Song(title, duration, lyrics);
-            _songRepository.Add(song);    
-            MessageBox.Show("Song added");
-        }
-        else
-        {
-            MessageBox.Show("Song exist");    
+            await _songRepository.Add(song);
+            
+            Performer? performerExist = _performerRepository.Exist(artist);
+            if (performerExist == null)
+            {
+                await _performerRepository.Add(new Performer(artist));   
+                performerExist = _performerRepository.Exist(artist);
+            }
+            
+            await _genreSetRepository.Add(tags,  song.Id);
+            
+            await _performerSetRepository.Add(performerExist!.Id, song.Id);
         }
     }
 

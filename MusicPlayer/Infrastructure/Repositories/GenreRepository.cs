@@ -1,4 +1,4 @@
-﻿using MusicPlayer.DataBase.Models;
+﻿using MusicPlayer.Domain.Models;
 using MusicPlayer.Domain.Interfaces;
 using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
 
@@ -13,16 +13,16 @@ public class GenreRepository : IGenreRepository
         _context = context;
     }
 
-    public void Add(List<string> tags)
+    public async Task Add(List<string> tags)
     {
         foreach (var tag in tags)
         {
             if (!Contains(tag))
             {
-                _context.Genres.Add(new Genre(tag));    
+                _context.Genres.Add(new Genre(tag));
             }
             
-            _context.SaveChanges();    
+            await _context.SaveChangesAsync();    
         }
     }
 
