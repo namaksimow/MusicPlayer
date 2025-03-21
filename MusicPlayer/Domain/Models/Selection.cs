@@ -1,4 +1,4 @@
-﻿namespace MusicPlayer.DataBase.Models;
+﻿namespace MusicPlayer.Domain.Models;
 
 public class Selection
 {

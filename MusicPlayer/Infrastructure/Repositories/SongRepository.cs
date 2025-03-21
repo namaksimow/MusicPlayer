@@ -1,4 +1,4 @@
-﻿using MusicPlayer.DataBase.Models;
+﻿using MusicPlayer.Domain.Models;
 using MusicPlayer.Domain.Interfaces;
 using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
 
@@ -13,14 +13,14 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
-    public void Add(Song entity)
+    public async Task Add(Song entity)
     {
         _context.Songs.Add(entity);
-        _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     public bool Contains(string title)
     {
-        return _context.Songs.Any(s => s.Title == title);
+        return _context.Songs.Any(s => s.UpperTitle == title.ToUpper());
     }
 }

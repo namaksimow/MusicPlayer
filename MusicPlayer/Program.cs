@@ -45,6 +45,9 @@ static class Program
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<ISongRepository, SongRepository>();
         services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IPerformerRepository, PerformerRepository>();
+        services.AddScoped<IGenreSetRepository, GenreSetRepository>();
+        services.AddScoped<IPerformerSetRepository, PerformerSetRepository>();
         services.AddScoped<Main>();
 
         return services;

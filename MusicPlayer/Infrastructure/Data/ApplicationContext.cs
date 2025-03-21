@@ -1,13 +1,10 @@
-﻿using MusicPlayer.DataBase.Models;
+﻿using MusicPlayer.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MusicPlayer.Infrastructure.Data;
 
 public class ApplicationContext : DbContext
 {
-    private string _connectionString 
-        = "UserId=postgres;Password=aASDnqn1k_02;Host=localhost;Port=5434;Database=MusicSelection;";
-
     public DbSet<Song> Songs { get; set; }
     public DbSet<User> Users { get; set; } 
     public DbSet<UserSet> UserSets { get; set; } 

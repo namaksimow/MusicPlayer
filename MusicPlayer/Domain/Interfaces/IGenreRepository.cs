@@ -1,8 +1,8 @@
-﻿using MusicPlayer.DataBase.Models;
+﻿using MusicPlayer.Domain.Models;
 
 namespace MusicPlayer.Domain.Interfaces;
 
 public interface IGenreRepository
 {
-    void Add(List<string> tags);
+    Task Add(List<string> tags);
 }
