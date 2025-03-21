@@ -17,8 +17,17 @@ public class GenreRepository : IGenreRepository
     {
         foreach (var tag in tags)
         {
-            _context.Genres.Add(new Genre(tag));
+            if (!Contains(tag))
+            {
+                _context.Genres.Add(new Genre(tag));    
+            }
+            
             _context.SaveChanges();    
         }
+    }
+
+    private bool Contains(string name)
+    {
+        return _context.Genres.Any(g => g.Name == name);
     }
 }

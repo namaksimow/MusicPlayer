@@ -7,7 +7,7 @@ public class DurationService : IDurationService
 {
     public int GetDuration(string filePath)
     {
-        using var reader = new Mp3FileReader(filePath);
+        using var reader = new MediaFoundationReader(filePath);
         return (int)reader.TotalTime.TotalSeconds;
     }
 }
