@@ -1,5 +1,4 @@
 ﻿using MusicPlayer.Domain.Interfaces;
-using NAudio.Wave;
 
 namespace MusicPlayer.UI.Forms;
 
@@ -8,18 +7,12 @@ public partial class Main : Form
     private readonly ISongService _songService;
     private readonly IPlaylistService _playlistService;
     
-    private readonly WaveOutEvent _outputDevice = new();
-    private AudioFileReader? _audioFile;
-    
-    private int _dispIndex = -1;
-    
     public Main(ISongService songService, IPlaylistService playlistService)
     {
         _songService = songService;
         _playlistService = playlistService;
         InitializeComponent();
         LoadPlaylist();
-        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
     }
 
     /// <summary>
@@ -37,6 +30,11 @@ public partial class Main : Form
         }
     }
     
+    /// <summary>
+    /// Pick song to play
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void listBoxMain_MouseDown(object sender, MouseEventArgs e)
     {
         int index = listBoxMain.IndexFromPoint(e.Location);
@@ -44,31 +42,30 @@ public partial class Main : Form
         if (index != -1)
         {
             string song = listBoxMain.Items[index].ToString()!;
-
-            if (_dispIndex == -1)
+            int displayIndex = _playlistService.GetDisplayIndex();
+            
+            if (displayIndex == -1)
             {
-                PlayTrack(song);
-                _dispIndex = index;
+                _playlistService.PlayTrack(song);
+                _playlistService.ChangeDisplayIndex(index);
                 return;
             }
             
-            // Если играет тот же трек, то нужно приостановить трек
-            // Если начинает играть другой трек, то надо "удалить" старый трек
-            if (_dispIndex == index)
+            if (displayIndex == index) // Same track
             {
-                PauseResume();
+                _playlistService.PauseResume();
             }
-            else
+            else // another track
             {
-                DisposeWave();
-                PlayTrack(song);
-                _dispIndex = index;
+                _playlistService.DisposeWave();
+                _playlistService.PlayTrack(song);
+                _playlistService.ChangeDisplayIndex(index);
             }
         }
     }
     
     /// <summary>
-    /// Loading song from folder
+    /// Loading songs from folder
     /// </summary>
     private void LoadPlaylist()
     {
@@ -76,20 +73,6 @@ public partial class Main : Form
         listBoxMain.Items.AddRange(songs.ToArray());
     }
     
-    private void OnPlaybackStopped(object sender, StoppedEventArgs args)
-    {
-        if (_audioFile != null)
-        {
-            _audioFile.Position = 0;
-            _outputDevice.Play();
-            Console.WriteLine(_dispIndex);
-            if (_audioFile != null)
-            {
-                Console.WriteLine();
-            }    
-        }
-    }
-
     /// <summary>
     /// Change volume of playing track
     /// </summary>
@@ -97,46 +80,10 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void trackBarMainVolume_Scroll(object sender, EventArgs e)
     {
-        _outputDevice.Volume = trackBarMainVolume.Value / 100f;
-    }
-
-    private void PlayTrack(string songToPlay)
-    {
-        string path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
-        string song = Path.Combine(path, songToPlay);
-        
-        if (_audioFile == null)
-        {
-            _audioFile = new AudioFileReader(song);
-        }
-        
-        _outputDevice.Init(_audioFile);
-        _outputDevice.Play();
-    }
-
-    private void PauseResume()
-    {
-        if (_outputDevice.PlaybackState == PlaybackState.Playing)
-        {
-            _outputDevice.Pause();
-        }
-
-        else if (_outputDevice.PlaybackState == PlaybackState.Paused)
-        {
-            _outputDevice.Play();
-        }
+        float volume = trackBarMainVolume.Value / 100f;
+        _playlistService.VolumeChange(volume);
     }
     
-    private void DisposeWave()
-    {
-        if (_audioFile != null)
-        {
-            _audioFile.Dispose();
-            _audioFile = null;   
-        }
-        _outputDevice.Stop();
-    }
-
     /// <summary>
     /// Change position of track
     /// </summary>
@@ -144,76 +91,48 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void trackBarMainRewind_Scroll(object sender, EventArgs e)
     {
-        if (_audioFile != null)
-        {
-            long pos = _audioFile.Length * (trackBarMainRewind.Value + 1) / 11;
-            _audioFile.Position = pos;    
-        }
-    }
-
-    private void btnMainPlayPause_Click(object sender, EventArgs e)
-    {
-        if (_dispIndex == -1)
-        {
-            return;
-        }
-        
-        if (_outputDevice.PlaybackState == PlaybackState.Playing)
-        {
-            _outputDevice.Pause();
-            btnMainPlayPause.Text = "Play";
-        }
-
-        else if (_outputDevice.PlaybackState == PlaybackState.Paused)
-        {
-            _outputDevice.Play();
-            btnMainPlayPause.Text = "Pause";
-        }
+        _playlistService.Rewind(trackBarMainRewind.Value);   
     }
 
     /// <summary>
-    /// Next track
+    /// Pause track
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btnMainPlayPause_Click(object sender, EventArgs e)
+    {
+        _playlistService.PauseResume();
+    }
+
+    /// <summary>
+    /// Click to pick next track
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btnMainNext_Click(object sender, EventArgs e)
     {
-        if (_dispIndex == -1)
+        int displayIndex = _playlistService.NextTrack(listBoxMain.Items.Count);
+        if (displayIndex != -1)
         {
-            return;
+            string song = listBoxMain.Items[displayIndex].ToString()!;
+            _playlistService.DisposeWave();
+            _playlistService.PlayTrack(song);    
         }
-
-        _dispIndex += 1;
-        if (_dispIndex == listBoxMain.Items.Count)
-        {
-            _dispIndex = 0;
-        }
-        
-        string song = listBoxMain.Items[_dispIndex].ToString()!;
-        DisposeWave();
-        PlayTrack(song);
     }
 
     /// <summary>
-    /// Previous track
+    /// Click to pick previous track
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private void btnMainPrev_Click(object sender, EventArgs e)
     {
-        if (_dispIndex == -1)
+        int displayIndex = _playlistService.PreviousTrack(listBoxMain.Items.Count);
+        if (displayIndex != -1)
         {
-            return;
+            string song = listBoxMain.Items[displayIndex].ToString()!;
+            _playlistService.DisposeWave();
+            _playlistService.PlayTrack(song);    
         }
-
-        _dispIndex -= 1;
-        if (_dispIndex == -1)
-        {
-            _dispIndex = listBoxMain.Items.Count - 1;
-        }
-        
-        string song = listBoxMain.Items[_dispIndex].ToString()!;
-        DisposeWave();
-        PlayTrack(song);
     }
 }
