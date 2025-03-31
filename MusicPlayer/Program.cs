@@ -48,6 +48,7 @@ static class Program
         services.AddScoped<IPerformerRepository, PerformerRepository>();
         services.AddScoped<IGenreSetRepository, GenreSetRepository>();
         services.AddScoped<IPerformerSetRepository, PerformerSetRepository>();
+        services.AddScoped<IPlaylistService, PlaylistService>();
         services.AddScoped<Main>();
 
         return services;
