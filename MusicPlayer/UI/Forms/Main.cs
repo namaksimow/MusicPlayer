@@ -8,10 +8,10 @@ public partial class Main : Form
     private readonly ISongService _songService;
     private readonly IPlaylistService _playlistService;
     
-    private WaveOutEvent outputDevice = new WaveOutEvent();
-    private AudioFileReader audioFile;
+    private readonly WaveOutEvent _outputDevice = new();
+    private AudioFileReader? _audioFile;
     
-    private int dispIndex = -1;
+    private int _dispIndex = -1;
     
     public Main(ISongService songService, IPlaylistService playlistService)
     {
@@ -19,7 +19,7 @@ public partial class Main : Form
         _playlistService = playlistService;
         InitializeComponent();
         LoadPlaylist();
-        outputDevice.PlaybackStopped += OnPlaybackStopped;
+        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
     }
 
     /// <summary>
@@ -45,17 +45,16 @@ public partial class Main : Form
         {
             string song = listBoxMain.Items[index].ToString()!;
 
-            if (dispIndex == -1)
+            if (_dispIndex == -1)
             {
                 PlayTrack(song);
-                dispIndex = index;
+                _dispIndex = index;
                 return;
             }
-
-            Console.WriteLine($"{dispIndex}: {index}");
+            
             // Если играет тот же трек, то нужно приостановить трек
             // Если начинает играть другой трек, то надо "удалить" старый трек
-            if (dispIndex == index)
+            if (_dispIndex == index)
             {
                 PauseResume();
             }
@@ -63,11 +62,8 @@ public partial class Main : Form
             {
                 DisposeWave();
                 PlayTrack(song);
-                dispIndex = index;
+                _dispIndex = index;
             }
-            
-            
-            Console.WriteLine(dispIndex);
         }
     }
     
@@ -82,12 +78,12 @@ public partial class Main : Form
     
     private void OnPlaybackStopped(object sender, StoppedEventArgs args)
     {
-        if (audioFile != null)
+        if (_audioFile != null)
         {
-            audioFile.Position = 0;
-            outputDevice.Play();
-            Console.WriteLine(dispIndex);
-            if (audioFile != null)
+            _audioFile.Position = 0;
+            _outputDevice.Play();
+            Console.WriteLine(_dispIndex);
+            if (_audioFile != null)
             {
                 Console.WriteLine();
             }    
@@ -99,12 +95,9 @@ public partial class Main : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void trackBarMain_Scroll(object sender, EventArgs e)
+    private void trackBarMainVolume_Scroll(object sender, EventArgs e)
     {
-        if (outputDevice != null) 
-        {
-            outputDevice.Volume = trackBarMain.Value / 100f;
-        }
+        _outputDevice.Volume = trackBarMainVolume.Value / 100f;
     }
 
     private void PlayTrack(string songToPlay)
@@ -112,36 +105,105 @@ public partial class Main : Form
         string path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
         string song = Path.Combine(path, songToPlay);
         
-        if (audioFile == null)
+        if (_audioFile == null)
         {
-            audioFile = new AudioFileReader(song);
+            _audioFile = new AudioFileReader(song);
         }
-
-        Console.WriteLine($"Инициализация трека {song}");
-        outputDevice.Init(audioFile);
-        outputDevice.Play();
+        
+        _outputDevice.Init(_audioFile);
+        _outputDevice.Play();
     }
 
     private void PauseResume()
     {
-        if (outputDevice.PlaybackState == PlaybackState.Playing)
+        if (_outputDevice.PlaybackState == PlaybackState.Playing)
         {
-            outputDevice.Pause();
+            _outputDevice.Pause();
         }
 
-        else if (outputDevice.PlaybackState == PlaybackState.Paused)
+        else if (_outputDevice.PlaybackState == PlaybackState.Paused)
         {
-            outputDevice.Play();
+            _outputDevice.Play();
         }
     }
     
     private void DisposeWave()
     {
-        if (audioFile != null)
+        if (_audioFile != null)
         {
-            audioFile.Dispose();
-            audioFile = null;   
+            _audioFile.Dispose();
+            _audioFile = null;   
         }
-        outputDevice.Stop();
+        _outputDevice.Stop();
+    }
+
+    /// <summary>
+    /// Change position of track
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void trackBarMainRewind_Scroll(object sender, EventArgs e)
+    {
+        if (_audioFile != null)
+        {
+            long pos = _audioFile.Length * (trackBarMainRewind.Value + 1) / 11;
+            _audioFile.Position = pos;    
+        }
+    }
+
+    private void btnMainPlayPause_Click(object sender, EventArgs e)
+    {
+        if (_dispIndex == -1)
+        {
+            return;
+        }
+        
+        if (_outputDevice.PlaybackState == PlaybackState.Playing)
+        {
+            _outputDevice.Pause();
+            btnMainPlayPause.Text = "Play";
+        }
+
+        else if (_outputDevice.PlaybackState == PlaybackState.Paused)
+        {
+            _outputDevice.Play();
+            btnMainPlayPause.Text = "Pause";
+        }
+    }
+
+    private void btnMainNext_Click(object sender, EventArgs e)
+    {
+        if (_dispIndex == -1)
+        {
+            return;
+        }
+
+        _dispIndex += 1;
+        if (_dispIndex == listBoxMain.Items.Count)
+        {
+            _dispIndex = 0;
+        }
+        
+        string song = listBoxMain.Items[_dispIndex].ToString()!;
+        DisposeWave();
+        PlayTrack(song);
+    }
+
+    private void btnMainPrev_Click(object sender, EventArgs e)
+    {
+        if (_dispIndex == -1)
+        {
+            return;
+        }
+
+        _dispIndex -= 1;
+        if (_dispIndex == -1)
+        {
+            _dispIndex = listBoxMain.Items.Count - 1;
+        }
+        
+        string song = listBoxMain.Items[_dispIndex].ToString()!;
+        DisposeWave();
+        PlayTrack(song);
     }
 }
