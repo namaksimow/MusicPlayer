@@ -11,6 +11,4 @@ public class PlaylistService : IPlaylistService
         FileInfo[] files = dinfo.GetFiles("*.mp3");
         return files.Select(f => f.Name).ToList();
     }
-    
-    
 }

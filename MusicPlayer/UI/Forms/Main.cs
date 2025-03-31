@@ -8,10 +8,10 @@ public partial class Main : Form
     private readonly ISongService _songService;
     private readonly IPlaylistService _playlistService;
     
-    private WaveOutEvent outputDevice;
+    private WaveOutEvent outputDevice = new WaveOutEvent();
     private AudioFileReader audioFile;
     
-    private string currentSong = "";
+    private int dispIndex = -1;
     
     public Main(ISongService songService, IPlaylistService playlistService)
     {
@@ -19,8 +19,14 @@ public partial class Main : Form
         _playlistService = playlistService;
         InitializeComponent();
         LoadPlaylist();
+        outputDevice.PlaybackStopped += OnPlaybackStopped;
     }
 
+    /// <summary>
+    /// Adding song to playlist
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private async void btnMainUpload_Click(object sender, EventArgs e)
     {
         using OpenFileDialog openFileDialog = new();
@@ -31,49 +37,111 @@ public partial class Main : Form
         }
     }
     
-    private void listBoxMain_SelectedIndexChanged(object sender, EventArgs e)
+    private void listBoxMain_MouseDown(object sender, MouseEventArgs e)
     {
-        int dispIndex = listBoxMain.SelectedIndex;
-        if (dispIndex != -1)
+        int index = listBoxMain.IndexFromPoint(e.Location);
+
+        if (index != -1)
         {
-            currentSong = listBoxMain.Items[dispIndex].ToString();    
+            string song = listBoxMain.Items[index].ToString()!;
+
+            if (dispIndex == -1)
+            {
+                PlayTrack(song);
+                dispIndex = index;
+                return;
+            }
+
+            Console.WriteLine($"{dispIndex}: {index}");
+            // Если играет тот же трек, то нужно приостановить трек
+            // Если начинает играть другой трек, то надо "удалить" старый трек
+            if (dispIndex == index)
+            {
+                PauseResume();
+            }
+            else
+            {
+                DisposeWave();
+                PlayTrack(song);
+                dispIndex = index;
+            }
+            
+            
+            Console.WriteLine(dispIndex);
         }
     }
-
+    
+    /// <summary>
+    /// Loading song from folder
+    /// </summary>
     private void LoadPlaylist()
     {
         List<string> songs = _playlistService.LoadPlaylist();
         listBoxMain.Items.AddRange(songs.ToArray());
     }
-
-    private void btnMainPlay_Click(object sender, EventArgs e)
-    {
-        if (outputDevice == null)
-        {
-            outputDevice = new WaveOutEvent();
-            outputDevice.PlaybackStopped += OnPlaybackStopped;
-        }
-        if (audioFile == null)
-        {
-            string path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
-            string song = $"{path}\\{currentSong}";
-            Console.WriteLine(song);
-            audioFile = new AudioFileReader(song);
-            outputDevice.Init(audioFile);
-        }
-        outputDevice.Play();
-    }
-
-    private void btnMainStop_Click(object sender, EventArgs e)
-    {
-        outputDevice?.Stop();
-    }
     
     private void OnPlaybackStopped(object sender, StoppedEventArgs args)
     {
-        outputDevice.Dispose();
-        outputDevice = null;
-        audioFile.Dispose();
-        audioFile = null;
+        if (audioFile != null)
+        {
+            audioFile.Position = 0;
+            outputDevice.Play();
+            Console.WriteLine(dispIndex);
+            if (audioFile != null)
+            {
+                Console.WriteLine();
+            }    
+        }
+    }
+
+    /// <summary>
+    /// Change volume of playing track
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void trackBarMain_Scroll(object sender, EventArgs e)
+    {
+        if (outputDevice != null) 
+        {
+            outputDevice.Volume = trackBarMain.Value / 100f;
+        }
+    }
+
+    private void PlayTrack(string songToPlay)
+    {
+        string path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
+        string song = Path.Combine(path, songToPlay);
+        
+        if (audioFile == null)
+        {
+            audioFile = new AudioFileReader(song);
+        }
+
+        Console.WriteLine($"Инициализация трека {song}");
+        outputDevice.Init(audioFile);
+        outputDevice.Play();
+    }
+
+    private void PauseResume()
+    {
+        if (outputDevice.PlaybackState == PlaybackState.Playing)
+        {
+            outputDevice.Pause();
+        }
+
+        else if (outputDevice.PlaybackState == PlaybackState.Paused)
+        {
+            outputDevice.Play();
+        }
+    }
+    
+    private void DisposeWave()
+    {
+        if (audioFile != null)
+        {
+            audioFile.Dispose();
+            audioFile = null;   
+        }
+        outputDevice.Stop();
     }
 }

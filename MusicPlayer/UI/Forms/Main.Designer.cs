@@ -33,16 +33,16 @@ partial class Main
     {
         btnMainUpload = new System.Windows.Forms.Button();
         listBoxMain = new System.Windows.Forms.ListBox();
-        btnMainPlay = new System.Windows.Forms.Button();
-        btnMainStop = new System.Windows.Forms.Button();
+        trackBarMain = new System.Windows.Forms.TrackBar();
+        ((System.ComponentModel.ISupportInitialize)trackBarMain).BeginInit();
         SuspendLayout();
         // 
         // btnMainUpload
         // 
-        btnMainUpload.Location = new System.Drawing.Point(659, 12);
+        btnMainUpload.Location = new System.Drawing.Point(653, 21);
         btnMainUpload.Name = "btnMainUpload";
-        btnMainUpload.Size = new System.Drawing.Size(129, 49);
-        btnMainUpload.TabIndex = 0;
+        btnMainUpload.Size = new System.Drawing.Size(129, 54);
+        btnMainUpload.TabIndex = 7;
         btnMainUpload.Text = "Upload";
         btnMainUpload.UseVisualStyleBackColor = true;
         btnMainUpload.Click += btnMainUpload_Click;
@@ -51,48 +51,36 @@ partial class Main
         // 
         listBoxMain.FormattingEnabled = true;
         listBoxMain.ItemHeight = 15;
-        listBoxMain.Location = new System.Drawing.Point(164, 12);
+        listBoxMain.Location = new System.Drawing.Point(104, 21);
         listBoxMain.Name = "listBoxMain";
-        listBoxMain.Size = new System.Drawing.Size(489, 754);
-        listBoxMain.TabIndex = 1;
-        listBoxMain.SelectedIndexChanged += listBoxMain_SelectedIndexChanged;
+        listBoxMain.Size = new System.Drawing.Size(543, 634);
+        listBoxMain.TabIndex = 8;
+        listBoxMain.MouseDown += listBoxMain_MouseDown;
         // 
-        // btnMainPlay
+        // trackBarMain
         // 
-        btnMainPlay.Location = new System.Drawing.Point(354, 772);
-        btnMainPlay.Name = "btnMainPlay";
-        btnMainPlay.Size = new System.Drawing.Size(129, 49);
-        btnMainPlay.TabIndex = 2;
-        btnMainPlay.Text = "Play";
-        btnMainPlay.UseVisualStyleBackColor = true;
-        btnMainPlay.Click += btnMainPlay_Click;
-        // 
-        // btnMainStop
-        // 
-        btnMainStop.Location = new System.Drawing.Point(489, 772);
-        btnMainStop.Name = "btnMainStop";
-        btnMainStop.Size = new System.Drawing.Size(129, 49);
-        btnMainStop.TabIndex = 3;
-        btnMainStop.Text = "Stop";
-        btnMainStop.UseVisualStyleBackColor = true;
-        btnMainStop.Click += btnMainStop_Click;
+        trackBarMain.Location = new System.Drawing.Point(668, 610);
+        trackBarMain.Name = "trackBarMain";
+        trackBarMain.Size = new System.Drawing.Size(114, 45);
+        trackBarMain.TabIndex = 9;
+        trackBarMain.Scroll += trackBarMain_Scroll;
         // 
         // Main
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(794, 837);
-        Controls.Add(btnMainStop);
-        Controls.Add(btnMainPlay);
+        BackColor = System.Drawing.SystemColors.Control;
+        ClientSize = new System.Drawing.Size(794, 786);
+        Controls.Add(trackBarMain);
         Controls.Add(listBoxMain);
         Controls.Add(btnMainUpload);
-        Text = "test";
+        Location = new System.Drawing.Point(15, 15);
+        ((System.ComponentModel.ISupportInitialize)trackBarMain).EndInit();
         ResumeLayout(false);
+        PerformLayout();
     }
 
-    private System.Windows.Forms.Button btnMainStop;
-
-    private System.Windows.Forms.Button btnMainPlay;
+    private System.Windows.Forms.TrackBar trackBarMain;
 
     private System.Windows.Forms.ListBox listBoxMain;
 
