@@ -171,6 +171,11 @@ public partial class Main : Form
         }
     }
 
+    /// <summary>
+    /// Next track
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void btnMainNext_Click(object sender, EventArgs e)
     {
         if (_dispIndex == -1)
@@ -189,6 +194,11 @@ public partial class Main : Form
         PlayTrack(song);
     }
 
+    /// <summary>
+    /// Previous track
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void btnMainPrev_Click(object sender, EventArgs e)
     {
         if (_dispIndex == -1)
