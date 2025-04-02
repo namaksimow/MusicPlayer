@@ -11,8 +11,9 @@ public class TagService : ITagService
     {
         List<string> artistTags = await GetArtistTags(artist);
         List<string> trackTags = await GetTrackTags(artist, title);
+        List<string> tags = await DefineTrackTags(trackTags, artistTags);
         
-        return artistTags.Intersect(trackTags).ToList();
+        return tags;
     }
 
     public async Task<List<string>> GetArtistTags(string artist)
@@ -48,6 +49,33 @@ public class TagService : ITagService
                 .ToList();
 
             return popularTags;
+        }
+
+        return null;
+    }
+
+    private async Task<List<string>> DefineTrackTags(List<string> trackTags, List<string> artistTags)
+    {
+        if (trackTags == null)
+        {
+            return artistTags;
+        }
+
+        if (artistTags == null)
+        {
+            return trackTags;
+        }
+        
+        if (artistTags != null)
+        {
+            List<string> tags = artistTags.Intersect(trackTags).ToList();
+            
+            if (tags.Count != 0)
+            {
+                return tags;
+            }
+            
+            return artistTags;
         }
 
         return null;
