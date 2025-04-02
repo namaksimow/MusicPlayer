@@ -27,6 +27,8 @@ public partial class Main : Form
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
             await _songService.AddSong(openFileDialog.FileName);
+            string songName = _songService.GetSongName(openFileDialog.FileName);
+            listBoxMain.Items.Add(songName);
         }
     }
     

@@ -62,6 +62,12 @@ public class SongService : ISongService
         }
     }
 
+    public string GetSongName(string fileName)
+    {
+        string[] data = fileName.Split(@"\");
+        return data.Last();
+    }
+    
     private (string artist, string title) ParseFileName(string fileName)
     {
         string[] artistAndTrack = fileName.Split('-');

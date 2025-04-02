@@ -1,31 +1,25 @@
 ﻿using GeniusAPI;
 using MusicPlayer.Domain.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace MusicPlayer.Application.Services;
 
 public class LyricsService :  ILyricsService
 {
-    private readonly GeniusClient _geniusClient;
-
-    public LyricsService(GeniusClient geniusClient)
-    {
-        _geniusClient = geniusClient;
-    }
-
     public async Task<string> GetLyrics(string artist, string title)
     {
-        var trackInfo = await _geniusClient.GetTrackInfoAsync(title, artist);
-
-        if (trackInfo != null)
+        using (HttpClient client = new HttpClient())
         {
-            string? lyrics = trackInfo.Lyrics;
+            string url = $"https://api.lyrics.ovh/v1/{Uri.EscapeDataString(artist)}/{Uri.EscapeDataString(title)}";
 
-            if (lyrics != null)
-            {
-                return lyrics;
-            }
+            HttpResponseMessage response = await client.GetAsync(url);
+                
+            if (!response.IsSuccessStatusCode)
+                return "Текст не найден";
+                
+            string json = await response.Content.ReadAsStringAsync();
+            JObject data = JObject.Parse(json);
+            return data["lyrics"]?.ToString();
         }
-
-        return "Song`s lyrics not found";
     }
 }
