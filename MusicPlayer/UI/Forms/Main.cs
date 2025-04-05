@@ -56,11 +56,11 @@ public partial class Main : Form
                     _playlistService.ChangeDisplayIndex(index);
                 }
             
-                else if (displayIndex == index) // Same track
+                else if (displayIndex == index) // Тот же трек
                 {
                     _playlistService.PauseResume();
                 }
-                else // another track
+                else // Другой трек
                 {
                     _playlistService.DisposeWave();
                     _playlistService.PlayTrack(song);
