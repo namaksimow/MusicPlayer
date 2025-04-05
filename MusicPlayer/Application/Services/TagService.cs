@@ -16,12 +16,23 @@ public class TagService : ITagService
         return tags;
     }
 
+    /// <summary>
+    /// Получить жанры у артиста
+    /// </summary>
+    /// <param name="artist">Имя артиста</param>
+    /// <returns>Список жанров</returns>
     public async Task<List<string>> GetArtistTags(string artist)
     {
         string url = $"https://ws.audioscrobbler.com/2.0/?method=artist.getTopTags&artist={Uri.EscapeDataString(artist)}&api_key={_apiKey}&format=json";
         return await FetchTags(url);
     }
 
+    /// <summary>
+    /// Получить жанры
+    /// </summary>
+    /// <param name="artist">Имя артиста</param>
+    /// <param name="title">Название песни</param>
+    /// <returns>Список общих жанров</returns>
     public async Task<List<string>> GetTrackTags(string artist, string title)
     {
         string url = $"http://ws.audioscrobbler.com/2.0/?method=track.gettoptags&artist={Uri.EscapeDataString(artist)}&track={Uri.EscapeDataString(title)}&api_key={_apiKey}&format=json";
@@ -29,6 +40,11 @@ public class TagService : ITagService
         return await FetchTags(url);
     }
     
+    /// <summary>
+    /// Поиск жанров
+    /// </summary>
+    /// <param name="url">Api ссылка</param>
+    /// <returns></returns>
     private async Task<List<string>> FetchTags(string url)
     {
         using HttpClient client = new HttpClient();
@@ -43,6 +59,8 @@ public class TagService : ITagService
         
         if (tags != null && tags.HasValues)
         {
+            // Отбираем только популярные теги. Будем считать тег популярным,
+            // если у него свойство count больше или равно 50 
             List<string> popularTags = tags
                 .Where(tag => (int?)tag["count"] >= 50)
                 .Select(tag => (string)tag["name"])
@@ -54,8 +72,15 @@ public class TagService : ITagService
         return null;
     }
 
+    /// <summary>
+    /// Определяем общие теги 
+    /// </summary>
+    /// <param name="trackTags">Список тегов для артиста</param>
+    /// <param name="artistTags">Список тегов для песни</param>
+    /// <returns></returns>
     private async Task<List<string>> DefineTrackTags(List<string> trackTags, List<string> artistTags)
     {
+        // Если один из списков null, то для песни дадим теги не null списка
         if (trackTags == null)
         {
             return artistTags;
@@ -70,6 +95,7 @@ public class TagService : ITagService
         {
             List<string> tags = artistTags.Intersect(trackTags).ToList();
             
+            // Если список общих тегов не пустой
             if (tags.Count != 0)
             {
                 return tags;

@@ -31,13 +31,17 @@ partial class Main
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         btnMainUpload = new System.Windows.Forms.Button();
         listBoxMain = new System.Windows.Forms.ListBox();
+        contextMenuStripMain = new System.Windows.Forms.ContextMenuStrip(components);
+        toolStripMenuDelete = new System.Windows.Forms.ToolStripMenuItem();
         trackBarMainVolume = new System.Windows.Forms.TrackBar();
         trackBarMainRewind = new System.Windows.Forms.TrackBar();
         btnMainPlayPause = new System.Windows.Forms.Button();
         btnMainNext = new System.Windows.Forms.Button();
         btnMainPrev = new System.Windows.Forms.Button();
+        contextMenuStripMain.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).BeginInit();
         SuspendLayout();
@@ -55,6 +59,7 @@ partial class Main
         // listBoxMain
         // 
         listBoxMain.Anchor = System.Windows.Forms.AnchorStyles.Top;
+        listBoxMain.ContextMenuStrip = contextMenuStripMain;
         listBoxMain.FormattingEnabled = true;
         listBoxMain.HorizontalScrollbar = true;
         listBoxMain.ItemHeight = 15;
@@ -63,6 +68,19 @@ partial class Main
         listBoxMain.Size = new System.Drawing.Size(329, 619);
         listBoxMain.TabIndex = 8;
         listBoxMain.MouseDown += listBoxMain_MouseDown;
+        // 
+        // contextMenuStripMain
+        // 
+        contextMenuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuDelete });
+        contextMenuStripMain.Name = "contextMenuStripMain";
+        contextMenuStripMain.Size = new System.Drawing.Size(108, 26);
+        // 
+        // toolStripMenuDelete
+        // 
+        toolStripMenuDelete.Name = "toolStripMenuDelete";
+        toolStripMenuDelete.Size = new System.Drawing.Size(107, 22);
+        toolStripMenuDelete.Text = "Delete";
+        toolStripMenuDelete.Click += ToolStripMenuDelete_Click;
         // 
         // trackBarMainVolume
         // 
@@ -75,6 +93,7 @@ partial class Main
         // trackBarMainRewind
         // 
         trackBarMainRewind.Location = new System.Drawing.Point(231, 716);
+        trackBarMainRewind.Maximum = 1000;
         trackBarMainRewind.Name = "trackBarMainRewind";
         trackBarMainRewind.Size = new System.Drawing.Size(329, 45);
         trackBarMainRewind.TabIndex = 10;
@@ -124,11 +143,15 @@ partial class Main
         Controls.Add(listBoxMain);
         Controls.Add(btnMainUpload);
         Location = new System.Drawing.Point(15, 15);
+        contextMenuStripMain.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).EndInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.ContextMenuStrip contextMenuStripMain;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuDelete;
 
     private System.Windows.Forms.Button btnMainNext;
     private System.Windows.Forms.Button btnMainPrev;

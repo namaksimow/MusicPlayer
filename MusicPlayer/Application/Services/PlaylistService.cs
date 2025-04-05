@@ -12,7 +12,7 @@ public class PlaylistService : IPlaylistService
     private int _dispIndex = -1;
     
     /// <summary>
-    /// Handle to control condition to stop track
+    /// Обработка при остановке трека. Трек может остановиться 
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -31,7 +31,7 @@ public class PlaylistService : IPlaylistService
     }
     
     /// <summary>
-    /// Get list of songs from folder
+    /// Получить список треков в папке
     /// </summary>
     /// <returns></returns>
     public List<string> LoadPlaylist()
@@ -42,9 +42,9 @@ public class PlaylistService : IPlaylistService
     }
 
     /// <summary>
-    /// Start play track
+    /// Начать произведение трека
     /// </summary>
-    /// <param name="songToPlay">name of file in folder</param>
+    /// <param name="songToPlay">Название файла в папке</param>
     public void PlayTrack(string songToPlay)
     {
         string song = System.IO.Path.Combine(Path, songToPlay);
@@ -59,7 +59,7 @@ public class PlaylistService : IPlaylistService
     }
     
     /// <summary>
-    /// Delete track from device
+    /// Удалить трек из проигрывающего девайса
     /// </summary>
     public void DisposeWave()
     {
@@ -72,7 +72,7 @@ public class PlaylistService : IPlaylistService
     }
 
     /// <summary>
-    /// Pause or resume current track
+    /// Остановить или продолжить воспроизведение трека
     /// </summary>
     public void PauseResume()
     {
@@ -93,50 +93,50 @@ public class PlaylistService : IPlaylistService
     }
     
     /// <summary>
-    /// Change volume of track
+    /// Изменить громкость трека
     /// </summary>
-    /// <param name="volume"></param>
+    /// <param name="volume">Значение громкости</param>
     public void VolumeChange(float volume)
     {
         _outputDevice.Volume = volume;
     }
 
     /// <summary>
-    /// Rewind track
+    /// Перемотка трека
     /// </summary>
-    /// <param name="trackbarValue">current value of trackBar</param>
+    /// <param name="trackbarValue">Текущее значение на трекбаре</param>
     public void Rewind(int trackbarValue)
     {
         if (_audioFile != null)
         {
-            long pos = _audioFile.Length * (trackbarValue + 1) / 11;
+            long pos = _audioFile.Length * (trackbarValue + 1) / 1001;
             _audioFile.Position = pos;
         }
     }
 
     /// <summary>
-    /// Change index of current song in listBox
+    /// Изменить номер текущей песни, которая играет
     /// </summary>
-    /// <param name="newDisplayIndex">index of new song</param>
+    /// <param name="newDisplayIndex">Индекс в listBox новой песни</param>
     public void ChangeDisplayIndex(int newDisplayIndex)
     {
         _dispIndex = newDisplayIndex;
     }
 
     /// <summary>
-    /// Get index of current song in listBox
+    /// Получить индекс песни, которая сейчас играет
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Индекс текущего трека</returns>
     public int GetDisplayIndex()
     {
         return _dispIndex;
     }
 
     /// <summary>
-    /// Start playing next track
+    /// Начать произведение трека, когда текущий трек заканчивается, то должен включиться следующий по списку
     /// </summary>
-    /// <param name="listBoxCount">count of songs in listBox</param>
-    /// <returns></returns>
+    /// <param name="listBoxCount">Количество песен в listBox</param>
+    /// <returns>Индекс текущего трека</returns>
     public int NextTrack(int listBoxCount)
     {
         if (_dispIndex == -1)
@@ -156,10 +156,10 @@ public class PlaylistService : IPlaylistService
     }
 
     /// <summary>
-    /// Start playing previous track
+    /// Начать воспроизведение предыдущего трека
     /// </summary>
-    /// <param name="listBoxCount">count of song in listBox</param>
-    /// <returns></returns>
+    /// <param name="listBoxCount">Количество песен в listBox</param>
+    /// <returns>Индекс текущего трека</returns>
     public int PreviousTrack(int listBoxCount)
     {
         if (_dispIndex == -1)
