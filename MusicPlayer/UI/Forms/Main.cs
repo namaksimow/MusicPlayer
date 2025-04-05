@@ -28,7 +28,7 @@ public partial class Main : Form
         {
             await _songService.AddSong(openFileDialog.FileName);
             string songName = _songService.GetSongName(openFileDialog.FileName);
-            listBoxMain.Items.Add(songName);
+            listBoxMainPlaylist.Items.Add(songName);
         }
     }
     
@@ -39,18 +39,20 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void listBoxMain_MouseDown(object sender, MouseEventArgs e)
     {
-        int index = listBoxMain.IndexFromPoint(e.Location);
+        int index = listBoxMainPlaylist.IndexFromPoint(e.Location);
 
         if (index != -1)
         {
             if (e.Button == MouseButtons.Left)
             {
-                string song = listBoxMain.Items[index].ToString()!;
+                string song = listBoxMainPlaylist.Items[index].ToString()!;
+                string lyrics = _songService.GetLyrics(song);
                 int displayIndex = _playlistService.GetDisplayIndex();
-            
+                
                 if (displayIndex == -1)
                 {
                     _playlistService.PlayTrack(song);
+                    textBoxMainLyrics.Text = lyrics;
                     _playlistService.ChangeDisplayIndex(index);
                 }
             
@@ -62,18 +64,19 @@ public partial class Main : Form
                 {
                     _playlistService.DisposeWave();
                     _playlistService.PlayTrack(song);
+                    textBoxMainLyrics.Text = lyrics;
                     _playlistService.ChangeDisplayIndex(index);
                 }
             }
             
             else if (e.Button == MouseButtons.Right)
             {
-                listBoxMain.ContextMenuStrip = contextMenuStripMain;
+                listBoxMainPlaylist.ContextMenuStrip = contextMenuStripMain;
             }
         }
         else
         {
-            listBoxMain.ContextMenuStrip = null;
+            listBoxMainPlaylist.ContextMenuStrip = null;
         }
     }
     
@@ -84,13 +87,14 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void ToolStripMenuDelete_Click(object sender, EventArgs e)
     {
-        int index = listBoxMain.SelectedIndex;
+        int index = listBoxMainPlaylist.SelectedIndex;
         if (index != -1)
         {
-            string song = listBoxMain.Items[index].ToString()!;
+            string song = listBoxMainPlaylist.Items[index].ToString()!;
             _playlistService.DisposeWave();
             _songService.DeleteSong(song);
-            listBoxMain.Items.Remove(song);
+            listBoxMainPlaylist.Items.Remove(song);
+            textBoxMainLyrics.Text = "";
         }
     }
     
@@ -100,7 +104,7 @@ public partial class Main : Form
     private void LoadPlaylist()
     {
         List<string> songs = _playlistService.LoadPlaylist();
-        listBoxMain.Items.AddRange(songs.ToArray());
+        listBoxMainPlaylist.Items.AddRange(songs.ToArray());
     }
     
     /// <summary>
@@ -141,12 +145,14 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void btnMainNext_Click(object sender, EventArgs e)
     {
-        int displayIndex = _playlistService.NextTrack(listBoxMain.Items.Count);
+        int displayIndex = _playlistService.NextTrack(listBoxMainPlaylist.Items.Count);
         if (displayIndex != -1)
         {
-            string song = listBoxMain.Items[displayIndex].ToString()!;
+            string song = listBoxMainPlaylist.Items[displayIndex].ToString()!;
+            string lyrics = _songService.GetLyrics(song);
             _playlistService.DisposeWave();
-            _playlistService.PlayTrack(song);    
+            _playlistService.PlayTrack(song);
+            textBoxMainLyrics.Text = lyrics;
         }
     }
 
@@ -157,12 +163,14 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void btnMainPrev_Click(object sender, EventArgs e)
     {
-        int displayIndex = _playlistService.PreviousTrack(listBoxMain.Items.Count);
+        int displayIndex = _playlistService.PreviousTrack(listBoxMainPlaylist.Items.Count);
         if (displayIndex != -1)
         {
-            string song = listBoxMain.Items[displayIndex].ToString()!;
+            string song = listBoxMainPlaylist.Items[displayIndex].ToString()!;
+            string lyrics = _songService.GetLyrics(song);
             _playlistService.DisposeWave();
             _playlistService.PlayTrack(song);    
+            textBoxMainLyrics.Text = lyrics;
         }
     }
 }
