@@ -33,7 +33,7 @@ partial class Main
     {
         components = new System.ComponentModel.Container();
         btnMainUpload = new System.Windows.Forms.Button();
-        listBoxMain = new System.Windows.Forms.ListBox();
+        listBoxMainPlaylist = new System.Windows.Forms.ListBox();
         contextMenuStripMain = new System.Windows.Forms.ContextMenuStrip(components);
         toolStripMenuDelete = new System.Windows.Forms.ToolStripMenuItem();
         trackBarMainVolume = new System.Windows.Forms.TrackBar();
@@ -41,6 +41,9 @@ partial class Main
         btnMainPlayPause = new System.Windows.Forms.Button();
         btnMainNext = new System.Windows.Forms.Button();
         btnMainPrev = new System.Windows.Forms.Button();
+        textBoxMainLyrics = new System.Windows.Forms.TextBox();
+        panelMainHideSlider = new System.Windows.Forms.Panel();
+        panelMainHideVolume = new System.Windows.Forms.Panel();
         contextMenuStripMain.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).BeginInit();
@@ -48,26 +51,26 @@ partial class Main
         // 
         // btnMainUpload
         // 
-        btnMainUpload.Location = new System.Drawing.Point(653, 21);
+        btnMainUpload.Location = new System.Drawing.Point(632, 21);
         btnMainUpload.Name = "btnMainUpload";
-        btnMainUpload.Size = new System.Drawing.Size(129, 54);
+        btnMainUpload.Size = new System.Drawing.Size(265, 71);
         btnMainUpload.TabIndex = 7;
         btnMainUpload.Text = "Upload";
         btnMainUpload.UseVisualStyleBackColor = true;
         btnMainUpload.Click += btnMainUpload_Click;
         // 
-        // listBoxMain
+        // listBoxMainPlaylist
         // 
-        listBoxMain.Anchor = System.Windows.Forms.AnchorStyles.Top;
-        listBoxMain.ContextMenuStrip = contextMenuStripMain;
-        listBoxMain.FormattingEnabled = true;
-        listBoxMain.HorizontalScrollbar = true;
-        listBoxMain.ItemHeight = 15;
-        listBoxMain.Location = new System.Drawing.Point(231, 21);
-        listBoxMain.Name = "listBoxMain";
-        listBoxMain.Size = new System.Drawing.Size(329, 619);
-        listBoxMain.TabIndex = 8;
-        listBoxMain.MouseDown += listBoxMain_MouseDown;
+        listBoxMainPlaylist.Anchor = System.Windows.Forms.AnchorStyles.Top;
+        listBoxMainPlaylist.ContextMenuStrip = contextMenuStripMain;
+        listBoxMainPlaylist.FormattingEnabled = true;
+        listBoxMainPlaylist.HorizontalScrollbar = true;
+        listBoxMainPlaylist.ItemHeight = 15;
+        listBoxMainPlaylist.Location = new System.Drawing.Point(288, 21);
+        listBoxMainPlaylist.Name = "listBoxMainPlaylist";
+        listBoxMainPlaylist.Size = new System.Drawing.Size(329, 619);
+        listBoxMainPlaylist.TabIndex = 8;
+        listBoxMainPlaylist.MouseDown += listBoxMain_MouseDown;
         // 
         // contextMenuStripMain
         // 
@@ -84,15 +87,15 @@ partial class Main
         // 
         // trackBarMainVolume
         // 
-        trackBarMainVolume.Location = new System.Drawing.Point(668, 716);
+        trackBarMainVolume.Location = new System.Drawing.Point(632, 655);
         trackBarMainVolume.Name = "trackBarMainVolume";
-        trackBarMainVolume.Size = new System.Drawing.Size(114, 45);
+        trackBarMainVolume.Size = new System.Drawing.Size(265, 45);
         trackBarMainVolume.TabIndex = 9;
         trackBarMainVolume.Scroll += trackBarMainVolume_Scroll;
         // 
         // trackBarMainRewind
         // 
-        trackBarMainRewind.Location = new System.Drawing.Point(231, 716);
+        trackBarMainRewind.Location = new System.Drawing.Point(288, 716);
         trackBarMainRewind.Maximum = 1000;
         trackBarMainRewind.Name = "trackBarMainRewind";
         trackBarMainRewind.Size = new System.Drawing.Size(329, 45);
@@ -101,7 +104,7 @@ partial class Main
         // 
         // btnMainPlayPause
         // 
-        btnMainPlayPause.Location = new System.Drawing.Point(356, 655);
+        btnMainPlayPause.Location = new System.Drawing.Point(414, 655);
         btnMainPlayPause.Name = "btnMainPlayPause";
         btnMainPlayPause.Size = new System.Drawing.Size(79, 55);
         btnMainPlayPause.TabIndex = 11;
@@ -111,7 +114,7 @@ partial class Main
         // 
         // btnMainNext
         // 
-        btnMainNext.Location = new System.Drawing.Point(481, 655);
+        btnMainNext.Location = new System.Drawing.Point(538, 655);
         btnMainNext.Name = "btnMainNext";
         btnMainNext.Size = new System.Drawing.Size(79, 55);
         btnMainNext.TabIndex = 12;
@@ -121,7 +124,7 @@ partial class Main
         // 
         // btnMainPrev
         // 
-        btnMainPrev.Location = new System.Drawing.Point(231, 655);
+        btnMainPrev.Location = new System.Drawing.Point(288, 655);
         btnMainPrev.Name = "btnMainPrev";
         btnMainPrev.Size = new System.Drawing.Size(79, 55);
         btnMainPrev.TabIndex = 13;
@@ -129,18 +132,46 @@ partial class Main
         btnMainPrev.UseVisualStyleBackColor = true;
         btnMainPrev.Click += btnMainPrev_Click;
         // 
+        // textBoxMainLyrics
+        // 
+        textBoxMainLyrics.Location = new System.Drawing.Point(632, 98);
+        textBoxMainLyrics.Multiline = true;
+        textBoxMainLyrics.Name = "textBoxMainLyrics";
+        textBoxMainLyrics.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        textBoxMainLyrics.Size = new System.Drawing.Size(265, 542);
+        textBoxMainLyrics.TabIndex = 14;
+        // 
+        // panelMainHideSlider
+        // 
+        panelMainHideSlider.BackColor = System.Drawing.SystemColors.Control;
+        panelMainHideSlider.Location = new System.Drawing.Point(288, 738);
+        panelMainHideSlider.Name = "panelMainHideSlider";
+        panelMainHideSlider.Size = new System.Drawing.Size(329, 12);
+        panelMainHideSlider.TabIndex = 15;
+        // 
+        // panelMainHideVolume
+        // 
+        panelMainHideVolume.BackColor = System.Drawing.SystemColors.Control;
+        panelMainHideVolume.Location = new System.Drawing.Point(632, 677);
+        panelMainHideVolume.Name = "panelMainHideVolume";
+        panelMainHideVolume.Size = new System.Drawing.Size(265, 10);
+        panelMainHideVolume.TabIndex = 16;
+        // 
         // Main
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.SystemColors.Control;
-        ClientSize = new System.Drawing.Size(794, 786);
+        ClientSize = new System.Drawing.Size(909, 786);
+        Controls.Add(panelMainHideVolume);
+        Controls.Add(panelMainHideSlider);
+        Controls.Add(textBoxMainLyrics);
         Controls.Add(btnMainPrev);
         Controls.Add(btnMainNext);
         Controls.Add(btnMainPlayPause);
         Controls.Add(trackBarMainRewind);
         Controls.Add(trackBarMainVolume);
-        Controls.Add(listBoxMain);
+        Controls.Add(listBoxMainPlaylist);
         Controls.Add(btnMainUpload);
         Location = new System.Drawing.Point(15, 15);
         contextMenuStripMain.ResumeLayout(false);
@@ -149,6 +180,12 @@ partial class Main
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Panel panelMainHideSlider;
+
+    private System.Windows.Forms.Panel panelMainHideVolume;
+
+    private System.Windows.Forms.TextBox textBoxMainLyrics;
 
     private System.Windows.Forms.ContextMenuStrip contextMenuStripMain;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuDelete;
@@ -162,7 +199,7 @@ partial class Main
 
     private System.Windows.Forms.TrackBar trackBarMainVolume;
 
-    private System.Windows.Forms.ListBox listBoxMain;
+    private System.Windows.Forms.ListBox listBoxMainPlaylist;
 
     private System.Windows.Forms.Button btnMainUpload;
 

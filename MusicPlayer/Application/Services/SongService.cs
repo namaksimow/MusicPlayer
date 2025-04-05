@@ -32,6 +32,14 @@ public class SongService : ISongService
         _performerSetRepository = performerSetRepository;
     }
 
+    public string GetLyrics(string fileName)
+    {
+        string artistAndTitle = Path.GetFileNameWithoutExtension(fileName);
+        string title = GetSongTitle(artistAndTitle);
+        var song = _songRepository.Find(title);
+        return song.Lyrics!;
+    }
+    
     /// <summary>
     /// Добавить трек
     /// </summary>

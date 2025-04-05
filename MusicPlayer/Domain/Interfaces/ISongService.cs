@@ -7,4 +7,6 @@ public interface ISongService
     public string GetSongName(string fileName);
     
     public void DeleteSong(string fileName);
+    
+    public string GetLyrics(string fileName);
 }
