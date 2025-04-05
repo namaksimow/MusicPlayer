@@ -6,6 +6,12 @@ namespace MusicPlayer.Application.Services;
 
 public class LyricsService :  ILyricsService
 {
+    /// <summary>
+    /// Получить текст песни. Скорее всего для русских песен будет плохо искать текст
+    /// </summary>
+    /// <param name="artist">Имя артиста</param>
+    /// <param name="title">Название песни</param>
+    /// <returns>Строку с текстом, либо текст не найден</returns>
     public async Task<string> GetLyrics(string artist, string title)
     {
         using (HttpClient client = new HttpClient())

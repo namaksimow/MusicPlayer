@@ -3,4 +3,5 @@
 public interface IGenreSetRepository
 {
     Task Add(List<string> tags, int songId);
+    void DeleteSongFromGenre(int songId);
 }

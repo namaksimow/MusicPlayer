@@ -16,7 +16,7 @@ public partial class Main : Form
     }
 
     /// <summary>
-    /// Adding song to playlist
+    /// Добавить песню в плейлист
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -33,7 +33,7 @@ public partial class Main : Form
     }
     
     /// <summary>
-    /// Pick song to play
+    /// Обработка действий с песнями, пкм - удалить, лкм - выбрать для проигрывания
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -43,31 +43,59 @@ public partial class Main : Form
 
         if (index != -1)
         {
-            string song = listBoxMain.Items[index].ToString()!;
-            int displayIndex = _playlistService.GetDisplayIndex();
+            if (e.Button == MouseButtons.Left)
+            {
+                string song = listBoxMain.Items[index].ToString()!;
+                int displayIndex = _playlistService.GetDisplayIndex();
             
-            if (displayIndex == -1)
-            {
-                _playlistService.PlayTrack(song);
-                _playlistService.ChangeDisplayIndex(index);
-                return;
+                if (displayIndex == -1)
+                {
+                    _playlistService.PlayTrack(song);
+                    _playlistService.ChangeDisplayIndex(index);
+                }
+            
+                else if (displayIndex == index) // Same track
+                {
+                    _playlistService.PauseResume();
+                }
+                else // another track
+                {
+                    _playlistService.DisposeWave();
+                    _playlistService.PlayTrack(song);
+                    _playlistService.ChangeDisplayIndex(index);
+                }
             }
             
-            if (displayIndex == index) // Same track
+            else if (e.Button == MouseButtons.Right)
             {
-                _playlistService.PauseResume();
+                listBoxMain.ContextMenuStrip = contextMenuStripMain;
             }
-            else // another track
-            {
-                _playlistService.DisposeWave();
-                _playlistService.PlayTrack(song);
-                _playlistService.ChangeDisplayIndex(index);
-            }
+        }
+        else
+        {
+            listBoxMain.ContextMenuStrip = null;
         }
     }
     
     /// <summary>
-    /// Loading songs from folder
+    /// Удаление песни из плейлиста
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ToolStripMenuDelete_Click(object sender, EventArgs e)
+    {
+        int index = listBoxMain.SelectedIndex;
+        if (index != -1)
+        {
+            string song = listBoxMain.Items[index].ToString()!;
+            _playlistService.DisposeWave();
+            _songService.DeleteSong(song);
+            listBoxMain.Items.Remove(song);
+        }
+    }
+    
+    /// <summary>
+    /// Загрузка песен из папки
     /// </summary>
     private void LoadPlaylist()
     {
@@ -76,7 +104,7 @@ public partial class Main : Form
     }
     
     /// <summary>
-    /// Change volume of playing track
+    /// Изменение громкости трека
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -87,7 +115,7 @@ public partial class Main : Form
     }
     
     /// <summary>
-    /// Change position of track
+    /// Изменение позиции трека
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -97,7 +125,7 @@ public partial class Main : Form
     }
 
     /// <summary>
-    /// Pause track
+    /// Остановить воспроизведение
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -107,7 +135,7 @@ public partial class Main : Form
     }
 
     /// <summary>
-    /// Click to pick next track
+    /// Выбрать следующий трек
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -123,7 +151,7 @@ public partial class Main : Form
     }
 
     /// <summary>
-    /// Click to pick previous track
+    /// Выбрать предыдущий трек
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>

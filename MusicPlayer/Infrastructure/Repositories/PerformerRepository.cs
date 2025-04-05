@@ -13,6 +13,10 @@ public class PerformerRepository : IPerformerRepository
         _context = context;
     }
 
+    /// <summary>
+    /// Добавить исполнителя
+    /// </summary>
+    /// <param name="entity">Объект с данными исполнителя</param>
     public async Task Add(Performer entity)
     {
         if (!Contains(entity.UpperName))
@@ -22,11 +26,23 @@ public class PerformerRepository : IPerformerRepository
         }
     }
     
+    /// <summary>
+    /// Существует ли данный исполнитель
+    /// </summary>
+    /// <param name="name">Название исполнителя для поиска</param>
+    /// <returns>Null, если пользователя нет.
+    /// Объект, если пользователь существует</returns>
     public Performer? Exist(string name)
     {
         return _context.Performers.FirstOrDefault(p => p.UpperName == name.ToUpper());
     }
 
+    /// <summary>
+    /// Существует ли такой пользователь
+    /// </summary>
+    /// <param name="name">Имя пользователя для поиска</param>
+    /// <returns>False, если пользователя нет.
+    /// True, если пользователь существует</returns>
     private bool Contains(string name)
     {
         return _context.Performers.Any(p => p.UpperName == name.ToUpper());

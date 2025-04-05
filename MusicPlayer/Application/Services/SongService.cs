@@ -32,6 +32,10 @@ public class SongService : ISongService
         _performerSetRepository = performerSetRepository;
     }
 
+    /// <summary>
+    /// Добавить трек
+    /// </summary>
+    /// <param name="filePath">Путь к треку в папке</param>
     public async Task AddSong(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -62,12 +66,49 @@ public class SongService : ISongService
         }
     }
 
-    public string GetSongName(string fileName)
+    /// <summary>
+    /// Удалить трек
+    /// </summary>
+    /// <param name="fileName"></param>
+    public void DeleteSong(string fileName)
     {
-        string[] data = fileName.Split(@"\");
-        return data.Last();
+        // Название трека без его расширения, по нему будем искать записи в БД
+        string title = GetSongTitle(Path.GetFileNameWithoutExtension(fileName)); 
+        
+        var song = _songRepository.Find(title);
+        _performerSetRepository.DeleteSongFromPerformer(song.Id);
+        _genreSetRepository.DeleteSongFromGenre(song.Id);
+        _songRepository.Delete(song.Id);
+        _fileStorage.DeleteFile(fileName);
     }
     
+    /// <summary>
+    /// Получить название песни
+    /// </summary>
+    /// <param name="filePath">Путь до файла</param>
+    /// <returns>Название трека</returns>
+    public string GetSongName(string filePath)
+    {
+        string[] data = filePath.Split(@"\");
+        return data.Last();
+    }
+
+    /// <summary>
+    /// Получить название песни
+    /// </summary>
+    /// <param name="fileName">Имя файла с исполнителем и название песни</param>
+    /// <returns>Название трека</returns>
+    private string GetSongTitle(string fileName)
+    {
+        string[] data = fileName.Split(@"-");
+        return data[1];
+    }
+    
+    /// <summary>
+    /// Получить имя исполнителя и название трека из названия файла
+    /// </summary>
+    /// <param name="fileName">Название файла</param>
+    /// <returns>имя артиста и название трека</returns>
     private (string artist, string title) ParseFileName(string fileName)
     {
         string[] artistAndTrack = fileName.Split('-');
