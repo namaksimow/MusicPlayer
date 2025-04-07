@@ -44,6 +44,7 @@ partial class Main
         textBoxMainLyrics = new System.Windows.Forms.TextBox();
         panelMainHideSlider = new System.Windows.Forms.Panel();
         panelMainHideVolume = new System.Windows.Forms.Panel();
+        label1 = new System.Windows.Forms.Label();
         contextMenuStripMain.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).BeginInit();
@@ -157,12 +158,23 @@ partial class Main
         panelMainHideVolume.Size = new System.Drawing.Size(265, 10);
         panelMainHideVolume.TabIndex = 16;
         // 
+        // label1
+        // 
+        label1.Font = new System.Drawing.Font("Segoe UI", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        label1.Location = new System.Drawing.Point(12, 21);
+        label1.Name = "label1";
+        label1.Size = new System.Drawing.Size(262, 38);
+        label1.TabIndex = 17;
+        label1.Text = "Media Library";
+        label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        // 
         // Main
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.SystemColors.Control;
         ClientSize = new System.Drawing.Size(909, 786);
+        Controls.Add(label1);
         Controls.Add(panelMainHideVolume);
         Controls.Add(panelMainHideSlider);
         Controls.Add(textBoxMainLyrics);
@@ -180,6 +192,8 @@ partial class Main
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Label label1;
 
     private System.Windows.Forms.Panel panelMainHideSlider;
 
