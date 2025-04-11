@@ -1,4 +1,5 @@
 ﻿using MusicPlayer.Domain.Interfaces;
+using MusicPlayer.Domain.Models;
 using NAudio.Wave;
 
 namespace MusicPlayer.Application.Services;
@@ -10,6 +11,16 @@ public class PlaylistService : IPlaylistService
     private readonly WaveOutEvent _outputDevice = new();
     private AudioFileReader? _audioFile;
     private int _dispIndex = -1;
+
+    int CurrentPlaylist { get; set; }
+
+    private readonly ISelectionRepository _selectionRepository;
+    
+    public PlaylistService(ISelectionRepository selectionRepository)
+    {
+        _selectionRepository = selectionRepository;
+        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
+    }
     
     /// <summary>
     /// Обработка при остановке трека. Трек может остановиться 
@@ -24,17 +35,46 @@ public class PlaylistService : IPlaylistService
             _outputDevice.Play();
         }
     }
-    
-    public PlaylistService()
+
+    /// <summary>
+    /// Установить последний открытый плейлист
+    /// </summary>
+    /// <param name="playlist"></param>
+    public void SetCurrentPlaylist(int playlist)
     {
-        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
+        CurrentPlaylist = playlist;
+    }
+
+    /// <summary>
+    /// Получить текущий открытый плейлист
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrentPlaylist()
+    {
+        return CurrentPlaylist;
+    }
+
+    public int GetSelectionId(string selectionName)
+    {
+        var playlist = _selectionRepository.GetSelection(selectionName);
+        return playlist.Id!;
+    }
+    
+    /// <summary>
+    /// Загрузить плейлист
+    /// </summary>
+    /// <returns></returns>
+    public List<string?> LoadAllPlaylist()
+    {
+        var playlist = _selectionRepository.GetAllSelections().Select(s => s.Name).ToList();
+        return playlist;
     }
     
     /// <summary>
     /// Получить список треков в папке
     /// </summary>
     /// <returns></returns>
-    public List<string> LoadPlaylist()
+    public List<string> LoadUploadTracks()
     {
         DirectoryInfo dinfo = new DirectoryInfo(Path);
         FileInfo[] files = dinfo.GetFiles("*.mp3");

@@ -2,7 +2,13 @@
 
 public interface IPlaylistService
 {
-    public List<string> LoadPlaylist();
+    public List<string> LoadUploadTracks();
+    
+    public List<string> LoadAllPlaylist();
+    
+    public int GetSelectionId(string selectionName);
+    
+    public void SetCurrentPlaylist(int playlist);
     
     public void PlayTrack(string songToPlay);
 
@@ -21,4 +27,6 @@ public interface IPlaylistService
     public int NextTrack(int listBoxCount);
     
     public int PreviousTrack(int listBoxCount);
+    
+    public int GetCurrentPlaylist();
 }

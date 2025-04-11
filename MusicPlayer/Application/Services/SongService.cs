@@ -15,6 +15,8 @@ public class SongService : ISongService
     private readonly IGenreSetRepository _genreSetRepository;
     private readonly IPerformerSetRepository _performerSetRepository;
 
+    string CurrentSong { get; set; }
+
     public SongService(IFileStorageService fileStorage, IDurationService durationService, 
         ILyricsService lyricsService, ITagService tagService, 
         ISongRepository songRepository, IGenreRepository genreRepository,
@@ -31,7 +33,22 @@ public class SongService : ISongService
         _genreSetRepository = genreSetRepository;
         _performerSetRepository = performerSetRepository;
     }
+    
+    public void SetCurrentSong(string song)
+    {
+        CurrentSong = song;
+    }
 
+    public string GetCurrentSong()
+    {
+        return CurrentSong;
+    }
+    
+    /// <summary>
+    /// Получить текст песни
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns>Текст песни типа string</returns>
     public string GetLyrics(string fileName)
     {
         string artistAndTitle = Path.GetFileNameWithoutExtension(fileName);

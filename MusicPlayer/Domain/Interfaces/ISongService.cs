@@ -9,4 +9,8 @@ public interface ISongService
     public void DeleteSong(string fileName);
     
     public string GetLyrics(string fileName);
+
+    public void SetCurrentSong(string song);
+    
+    public string GetCurrentSong();
 }
