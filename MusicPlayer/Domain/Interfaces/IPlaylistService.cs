@@ -1,14 +1,10 @@
 ﻿namespace MusicPlayer.Domain.Interfaces;
 
 public interface IPlaylistService
-{
-    public List<string> LoadUploadTracks();
+{    
+    public List<string> GetCurrentPlaylist();
     
-    public List<string> LoadAllPlaylist();
-    
-    public int GetSelectionId(string selectionName);
-    
-    public void SetCurrentPlaylist(int playlist);
+    public void SetCurrentPlaylistId(int playlist);
     
     public void PlayTrack(string songToPlay);
 
@@ -20,13 +16,19 @@ public interface IPlaylistService
 
     public void Rewind(int trackBarValue);
     
-    public void ChangeDisplayIndex(int newDisplayIndex);
+    public void ChangeCurrentSongIndex(int currentSong);
 
-    public int GetDisplayIndex();
+    public void SetCurrentPlaylist(List<string> playlist);
+
+    public void SetCurrentQueueIndex(int queue);
+    
+    public int GetCurrentQueueIndex();
+    
+    public int GetCurrentSongIndex();
     
     public int NextTrack(int listBoxCount);
     
     public int PreviousTrack(int listBoxCount);
     
-    public int GetCurrentPlaylist();
+    public int GetCurrentPlaylistId();
 }

@@ -46,11 +46,15 @@ partial class Main
         panelMainHideSlider = new System.Windows.Forms.Panel();
         panelMainHideVolume = new System.Windows.Forms.Panel();
         listBoxMainPlaylists = new System.Windows.Forms.ListBox();
-        btnMainAddPlaylist = new System.Windows.Forms.Button();
         contextMenuStripMainPlaylistEdit = new System.Windows.Forms.ContextMenuStrip(components);
+        btnMainAddPlaylist = new System.Windows.Forms.Button();
+        listBoxMainQueue = new System.Windows.Forms.ListBox();
+        lblMainQueue = new System.Windows.Forms.Label();
+        lblMainPlaylist = new System.Windows.Forms.Label();
         contextMenuStripMainSongEdit.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).BeginInit();
+        contextMenuStripMainPlaylistEdit.SuspendLayout();
         SuspendLayout();
         // 
         // btnMainUpload
@@ -70,11 +74,11 @@ partial class Main
         listBoxMainTracks.FormattingEnabled = true;
         listBoxMainTracks.HorizontalScrollbar = true;
         listBoxMainTracks.ItemHeight = 15;
-        listBoxMainTracks.Location = new System.Drawing.Point(286, 21);
+        listBoxMainTracks.Location = new System.Drawing.Point(173, 94);
         listBoxMainTracks.Name = "listBoxMainTracks";
-        listBoxMainTracks.Size = new System.Drawing.Size(329, 619);
+        listBoxMainTracks.Size = new System.Drawing.Size(232, 544);
         listBoxMainTracks.TabIndex = 8;
-        listBoxMainTracks.MouseDown += listBoxTracks_MouseDown;
+        listBoxMainTracks.MouseDown += listBoxTracksOrQueue_MouseDown;
         // 
         // contextMenuStripMainSongEdit
         // 
@@ -82,12 +86,19 @@ partial class Main
         contextMenuStripMainSongEdit.Name = "contextMenuStripMainSongEdit";
         contextMenuStripMainSongEdit.Size = new System.Drawing.Size(108, 26);
         // 
-        // toolStripMenuDelete
+        // toolStripMenuSongDelete
         // 
         toolStripMenuSongDelete.Name = "toolStripMenuSongDelete";
         toolStripMenuSongDelete.Size = new System.Drawing.Size(107, 22);
         toolStripMenuSongDelete.Text = "Delete";
         toolStripMenuSongDelete.Click += ToolStripMenuSongDeleteClick;
+        // 
+        // toolStripMenuItemPlaylistDelete
+        // 
+        toolStripMenuItemPlaylistDelete.Name = "toolStripMenuItemPlaylistDelete";
+        toolStripMenuItemPlaylistDelete.Size = new System.Drawing.Size(107, 22);
+        toolStripMenuItemPlaylistDelete.Text = "Delete";
+        toolStripMenuItemPlaylistDelete.Click += ToolStripMenuPlaylistDeleteClick;
         // 
         // trackBarMainVolume
         // 
@@ -169,9 +180,15 @@ partial class Main
         listBoxMainPlaylists.ItemHeight = 15;
         listBoxMainPlaylists.Location = new System.Drawing.Point(6, 96);
         listBoxMainPlaylists.Name = "listBoxMainPlaylists";
-        listBoxMainPlaylists.Size = new System.Drawing.Size(267, 544);
+        listBoxMainPlaylists.Size = new System.Drawing.Size(151, 544);
         listBoxMainPlaylists.TabIndex = 18;
         listBoxMainPlaylists.MouseDown += listBoxMainPlaylists_MouseDown;
+        // 
+        // contextMenuStripMainPlaylistEdit
+        // 
+        contextMenuStripMainPlaylistEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItemPlaylistDelete });
+        contextMenuStripMainPlaylistEdit.Name = "contextMenuStripMainPlaylistEdit";
+        contextMenuStripMainPlaylistEdit.Size = new System.Drawing.Size(108, 26);
         // 
         // btnMainAddPlaylist
         // 
@@ -182,19 +199,39 @@ partial class Main
         btnMainAddPlaylist.Text = "Add Playlist";
         btnMainAddPlaylist.UseVisualStyleBackColor = true;
         btnMainAddPlaylist.Click += btnMainAddPlaylist_Click;
-        //
-        // toolStripMenuItemPlaylistDelete
-        //
-        toolStripMenuItemPlaylistDelete.Name = "toolStripMenuItemPlaylistDelete";
-        toolStripMenuItemPlaylistDelete.Size = new System.Drawing.Size(107, 22);
-        toolStripMenuItemPlaylistDelete.Text = "Delete";
-        toolStripMenuItemPlaylistDelete.Click += ToolStripMenuPlaylistDeleteClick;
         // 
-        // contextMenuStripMainPlaylistEdit
+        // listBoxMainQueue
         // 
-        contextMenuStripMainPlaylistEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuItemPlaylistDelete });
-        contextMenuStripMainPlaylistEdit.Name = "contextMenuStripMainPlaylistEdit";
-        contextMenuStripMainPlaylistEdit.Size = new System.Drawing.Size(61, 4);
+        listBoxMainQueue.Anchor = System.Windows.Forms.AnchorStyles.Top;
+        listBoxMainQueue.ContextMenuStrip = contextMenuStripMainSongEdit;
+        listBoxMainQueue.FormattingEnabled = true;
+        listBoxMainQueue.HorizontalScrollbar = true;
+        listBoxMainQueue.ItemHeight = 15;
+        listBoxMainQueue.Location = new System.Drawing.Point(423, 96);
+        listBoxMainQueue.Name = "listBoxMainQueue";
+        listBoxMainQueue.Size = new System.Drawing.Size(194, 544);
+        listBoxMainQueue.TabIndex = 20;
+        listBoxMainQueue.MouseDown += listBoxTracksOrQueue_MouseDown;
+        // 
+        // lblMainQueue
+        // 
+        lblMainQueue.Font = new System.Drawing.Font("Segoe UI", 18F);
+        lblMainQueue.Location = new System.Drawing.Point(422, 27);
+        lblMainQueue.Name = "lblMainQueue";
+        lblMainQueue.Size = new System.Drawing.Size(195, 49);
+        lblMainQueue.TabIndex = 21;
+        lblMainQueue.Text = "Queue";
+        lblMainQueue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        // 
+        // lblMainPlaylist
+        // 
+        lblMainPlaylist.Font = new System.Drawing.Font("Segoe UI", 18F);
+        lblMainPlaylist.Location = new System.Drawing.Point(173, 27);
+        lblMainPlaylist.Name = "lblMainPlaylist";
+        lblMainPlaylist.Size = new System.Drawing.Size(232, 49);
+        lblMainPlaylist.TabIndex = 22;
+        lblMainPlaylist.Text = "Playlist";
+        lblMainPlaylist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // Main
         // 
@@ -202,6 +239,9 @@ partial class Main
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.SystemColors.Control;
         ClientSize = new System.Drawing.Size(909, 786);
+        Controls.Add(lblMainPlaylist);
+        Controls.Add(lblMainQueue);
+        Controls.Add(listBoxMainQueue);
         Controls.Add(btnMainAddPlaylist);
         Controls.Add(listBoxMainPlaylists);
         Controls.Add(panelMainHideVolume);
@@ -218,9 +258,16 @@ partial class Main
         contextMenuStripMainSongEdit.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).EndInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).EndInit();
+        contextMenuStripMainPlaylistEdit.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Label lblMainPlaylist;
+
+    private System.Windows.Forms.Label lblMainQueue;
+
+    private System.Windows.Forms.ListBox listBoxMainQueue;
 
     private System.Windows.Forms.ContextMenuStrip contextMenuStripMainPlaylistEdit;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlaylistDelete;

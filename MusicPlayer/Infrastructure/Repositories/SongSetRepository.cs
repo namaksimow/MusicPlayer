@@ -1,7 +1,9 @@
-﻿namespace MusicPlayer.Infrastructure.Repositories;
+﻿using MusicPlayer.Domain.Interfaces;
 using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
 
-public class SongSetRepository
+namespace MusicPlayer.Infrastructure.Repositories;
+
+public class SongSetRepository :  ISongSetRepository
 {
     private readonly ApplicationContext _context;
 
@@ -10,9 +12,13 @@ public class SongSetRepository
         _context = context;
     }
 
-    public List<int> GetSongsFromSelection(int selectionId)
+    public void DeleteSongSet(int selectionId)
     {
-        List<int> songs = _context.SongSets.Where(ss => ss.SelectionId == selectionId).Select(ss => ss.SongId).ToList();
-        return songs;
-    }
+        var songSet = _context.SongSets.Where(s => s.SelectionId == selectionId).ToList();
+        foreach (var set in songSet)
+        {
+            _context.SongSets.Remove(set);
+        }
+        _context.SaveChanges();
+    } 
 }

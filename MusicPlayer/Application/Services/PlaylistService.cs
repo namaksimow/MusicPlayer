@@ -9,17 +9,46 @@ public class PlaylistService : IPlaylistService
     private const string Path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
 
     private readonly WaveOutEvent _outputDevice = new();
-    private AudioFileReader? _audioFile;
-    private int _dispIndex = -1;
-
-    int CurrentPlaylist { get; set; }
-
-    private readonly ISelectionRepository _selectionRepository;
     
-    public PlaylistService(ISelectionRepository selectionRepository)
+    private AudioFileReader? _audioFile;
+    
+    private int _currentSongIndex = -1;
+    private int IndexCurrentPlaylist { get; set; } = -1;
+    private int IndexQueue { get; set; } = -1;
+    
+    private List<string> CurrentPlaylist;
+    
+    public PlaylistService()
     {
-        _selectionRepository = selectionRepository;
         _outputDevice.PlaybackStopped += OnPlaybackStopped!;
+    }
+
+    public int GetCurrentQueueIndex()
+    {
+        return IndexQueue;
+    }
+    
+    public void SetCurrentQueueIndex(int queue)
+    {
+        IndexQueue = queue;
+    }
+    
+    /// <summary>
+    /// Установить текущий играющий плейлист
+    /// </summary>
+    /// <param name="playlist"></param>
+    public void SetCurrentPlaylist(List<string> playlist)
+    {
+        CurrentPlaylist = playlist;
+    }
+
+    /// <summary>
+    /// Получить текущий играющий плейлист
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetCurrentPlaylist()
+    {
+        return CurrentPlaylist;
     }
     
     /// <summary>
@@ -37,39 +66,23 @@ public class PlaylistService : IPlaylistService
     }
 
     /// <summary>
-    /// Установить последний открытый плейлист
+    /// Установить номер последнего открытого плейлиста
     /// </summary>
     /// <param name="playlist"></param>
-    public void SetCurrentPlaylist(int playlist)
+    public void SetCurrentPlaylistId(int playlist)
     {
-        CurrentPlaylist = playlist;
+        IndexCurrentPlaylist = playlist;
     }
 
     /// <summary>
-    /// Получить текущий открытый плейлист
+    /// Получить текущий номер открытого плейлиста
     /// </summary>
     /// <returns></returns>
-    public int GetCurrentPlaylist()
+    public int GetCurrentPlaylistId()
     {
-        return CurrentPlaylist;
+        return IndexCurrentPlaylist;
     }
 
-    public int GetSelectionId(string selectionName)
-    {
-        var playlist = _selectionRepository.GetSelection(selectionName);
-        return playlist.Id!;
-    }
-    
-    /// <summary>
-    /// Загрузить плейлист
-    /// </summary>
-    /// <returns></returns>
-    public List<string?> LoadAllPlaylist()
-    {
-        var playlist = _selectionRepository.GetAllSelections().Select(s => s.Name).ToList();
-        return playlist;
-    }
-    
     /// <summary>
     /// Получить список треков в папке
     /// </summary>
@@ -116,7 +129,7 @@ public class PlaylistService : IPlaylistService
     /// </summary>
     public void PauseResume()
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return;
         }
@@ -157,19 +170,19 @@ public class PlaylistService : IPlaylistService
     /// <summary>
     /// Изменить номер текущей песни, которая играет
     /// </summary>
-    /// <param name="newDisplayIndex">Индекс в listBox новой песни</param>
-    public void ChangeDisplayIndex(int newDisplayIndex)
+    /// <param name="currentSong">Индекс в listBox новой песни</param>
+    public void ChangeCurrentSongIndex(int currentSong)
     {
-        _dispIndex = newDisplayIndex;
+        _currentSongIndex = currentSong;
     }
 
     /// <summary>
     /// Получить индекс песни, которая сейчас играет
     /// </summary>
     /// <returns>Индекс текущего трека</returns>
-    public int GetDisplayIndex()
+    public int GetCurrentSongIndex()
     {
-        return _dispIndex;
+        return _currentSongIndex;
     }
 
     /// <summary>
@@ -179,20 +192,20 @@ public class PlaylistService : IPlaylistService
     /// <returns>Индекс текущего трека</returns>
     public int NextTrack(int listBoxCount)
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return -1;
         }
         
-        _dispIndex += 1;
+        _currentSongIndex += 1;
         
-        if (_dispIndex == listBoxCount)
+        if (_currentSongIndex == listBoxCount)
         {
-            _dispIndex = 0;
-            return _dispIndex;
+            _currentSongIndex = 0;
+            return _currentSongIndex;
         }
         
-        return _dispIndex;
+        return _currentSongIndex;
     }
 
     /// <summary>
@@ -202,19 +215,19 @@ public class PlaylistService : IPlaylistService
     /// <returns>Индекс текущего трека</returns>
     public int PreviousTrack(int listBoxCount)
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return - 1;
         }
         
-        _dispIndex -= 1;
+        _currentSongIndex -= 1;
         
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
-            _dispIndex = listBoxCount - 1;
-            return _dispIndex;
+            _currentSongIndex = listBoxCount - 1;
+            return _currentSongIndex;
         }
         
-        return _dispIndex;
+        return _currentSongIndex;
     }
 }

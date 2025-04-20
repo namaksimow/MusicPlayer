@@ -2,5 +2,5 @@
 
 public interface ISongSetRepository
 {
-    public List<int> GetSongsFromSelection(int selectionId);
+    public void DeleteSongSet(int selectionId);
 }

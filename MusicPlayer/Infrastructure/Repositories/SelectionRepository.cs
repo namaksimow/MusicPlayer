@@ -13,13 +13,27 @@ public class SelectionRepository : ISelectionRepository
         _context = context;
     }
 
-    public List<Selection> GetAllSelections()
+    public List<string> GetAllSelections()
     {
-        return _context.Selections.ToList();
+        var selections = _context.Selections.ToList();
+        return selections.Select(s => s.Name).ToList()!;
     }
 
     public Selection GetSelection(string selectionName)
     {
         return _context.Selections.FirstOrDefault(s => s.Name == selectionName)!;
+    }
+
+    public int GetSelectionId(string name)
+    {
+        var selection = _context.Selections.FirstOrDefault(s => s.Name == name);
+        return selection.Id;
+    }
+
+    public void DeleteSelection(string name)
+    {
+        var selection = _context.Selections.FirstOrDefault(s => s.Name == name);
+        _context.Selections.Remove(selection);
+        _context.SaveChanges();
     }
 }
