@@ -16,7 +16,7 @@ public interface IPlaylistService
 
     public void Rewind(int trackBarValue);
     
-    public void ChangeCurrentSongIndex(int currentSong);
+    public void ChangeCurrentSongIndex(int indexTrack, int indexQueue);
 
     public void SetCurrentPlaylist(List<string> playlist);
 

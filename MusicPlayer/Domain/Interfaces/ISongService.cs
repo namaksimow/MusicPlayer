@@ -2,7 +2,7 @@
 
 public interface ISongService
 {
-    Task AddSong(string filePath);
+    Task<int> AddSong(string filePath);
 
     public string GetSongName(string fileName);
     
@@ -12,5 +12,7 @@ public interface ISongService
 
     public void SetCurrentSong(string song);
     
-    public string GetCurrentSong();
+    public string GetSongTitle(string fileName);
+
+    public (string artist, string title) ParseFileName(string fileName);
 }

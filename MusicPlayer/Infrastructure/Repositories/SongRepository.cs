@@ -53,4 +53,10 @@ public class SongRepository : ISongRepository
     {
         return _context.Songs.Any(s => s.UpperTitle == title.ToUpper());
     }
+
+    public int GetSongId(string title)
+    {
+        var song = _context.Songs.FirstOrDefault(s => s.Title == title);
+        return song!.Id;
+    }
 }

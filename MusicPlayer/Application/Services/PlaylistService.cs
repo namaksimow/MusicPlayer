@@ -23,11 +23,19 @@ public class PlaylistService : IPlaylistService
         _outputDevice.PlaybackStopped += OnPlaybackStopped!;
     }
 
+    /// <summary>
+    /// Получить плейлиста, который играет в очереди
+    /// </summary>
+    /// <returns></returns>
     public int GetCurrentQueueIndex()
     {
         return IndexQueue;
     }
     
+    /// <summary>
+    /// Установить текущую играющую очередь
+    /// </summary>
+    /// <param name="queue"></param>
     public void SetCurrentQueueIndex(int queue)
     {
         IndexQueue = queue;
@@ -170,10 +178,19 @@ public class PlaylistService : IPlaylistService
     /// <summary>
     /// Изменить номер текущей песни, которая играет
     /// </summary>
-    /// <param name="currentSong">Индекс в listBox новой песни</param>
-    public void ChangeCurrentSongIndex(int currentSong)
+    /// <param name="indexTrack">Индекс в listBoxTrack новой песни</param>
+    /// <param name="indexQueue">Индекс в listBoxQueue новой песни</param>
+    public void ChangeCurrentSongIndex(int indexTrack, int indexQueue)
     {
-        _currentSongIndex = currentSong;
+        // Так как песню мы можем выбрать как из загруженного плейлиста, так и из загруженной очереди
+        if (indexTrack == -1)
+        {
+            _currentSongIndex = indexQueue;    
+        }
+        else
+        {
+            _currentSongIndex = indexTrack;    
+        }
     }
 
     /// <summary>

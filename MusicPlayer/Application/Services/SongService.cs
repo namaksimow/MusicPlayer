@@ -61,7 +61,7 @@ public class SongService : ISongService
     /// Добавить трек
     /// </summary>
     /// <param name="filePath">Путь к треку в папке</param>
-    public async Task AddSong(string filePath)
+    public async Task<int> AddSong(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
         (string artist, string title) = ParseFileName(fileName);
@@ -88,6 +88,12 @@ public class SongService : ISongService
             await _genreSetRepository.Add(tags,  song.Id);
             
             await _performerSetRepository.Add(performerExist!.Id, song.Id);
+            
+            return song.Id;
+        }
+        else
+        {
+            return -1;
         }
     }
 
@@ -123,7 +129,7 @@ public class SongService : ISongService
     /// </summary>
     /// <param name="fileName">Имя файла с исполнителем и название песни</param>
     /// <returns>Название трека</returns>
-    private string GetSongTitle(string fileName)
+    public string GetSongTitle(string fileName)
     {
         string[] data = fileName.Split(@"-");
         return data[1];
@@ -134,7 +140,7 @@ public class SongService : ISongService
     /// </summary>
     /// <param name="fileName">Название файла</param>
     /// <returns>имя артиста и название трека</returns>
-    private (string artist, string title) ParseFileName(string fileName)
+    public (string artist, string title) ParseFileName(string fileName)
     {
         string[] artistAndTrack = fileName.Split('-');
         return (artistAndTrack[0], artistAndTrack[1]);

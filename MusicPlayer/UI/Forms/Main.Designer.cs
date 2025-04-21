@@ -36,6 +36,7 @@ partial class Main
         listBoxMainTracks = new System.Windows.Forms.ListBox();
         contextMenuStripMainSongEdit = new System.Windows.Forms.ContextMenuStrip(components);
         toolStripMenuSongDelete = new System.Windows.Forms.ToolStripMenuItem();
+        toolStripMenuSongAddToPlaylist = new System.Windows.Forms.ToolStripMenuItem();
         toolStripMenuItemPlaylistDelete = new System.Windows.Forms.ToolStripMenuItem();
         trackBarMainVolume = new System.Windows.Forms.TrackBar();
         trackBarMainRewind = new System.Windows.Forms.TrackBar();
@@ -82,16 +83,23 @@ partial class Main
         // 
         // contextMenuStripMainSongEdit
         // 
-        contextMenuStripMainSongEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuSongDelete });
+        contextMenuStripMainSongEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripMenuSongDelete, toolStripMenuSongAddToPlaylist });
         contextMenuStripMainSongEdit.Name = "contextMenuStripMainSongEdit";
-        contextMenuStripMainSongEdit.Size = new System.Drawing.Size(108, 26);
+        contextMenuStripMainSongEdit.Size = new System.Drawing.Size(152, 48);
         // 
         // toolStripMenuSongDelete
         // 
         toolStripMenuSongDelete.Name = "toolStripMenuSongDelete";
-        toolStripMenuSongDelete.Size = new System.Drawing.Size(107, 22);
+        toolStripMenuSongDelete.Size = new System.Drawing.Size(151, 22);
         toolStripMenuSongDelete.Text = "Delete";
         toolStripMenuSongDelete.Click += ToolStripMenuSongDeleteClick;
+        // 
+        // toolStripMenuSongAddToPlaylist
+        // 
+        toolStripMenuSongAddToPlaylist.Name = "toolStripMenuSongAddToPlaylist";
+        toolStripMenuSongAddToPlaylist.Size = new System.Drawing.Size(151, 22);
+        toolStripMenuSongAddToPlaylist.Text = "Add To Playlist";
+        toolStripMenuSongAddToPlaylist.Click += ToolStripMenuSongAddToPlaylistClick;
         // 
         // toolStripMenuItemPlaylistDelete
         // 
@@ -254,6 +262,7 @@ partial class Main
         Controls.Add(trackBarMainVolume);
         Controls.Add(listBoxMainTracks);
         Controls.Add(btnMainUpload);
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
         Location = new System.Drawing.Point(15, 15);
         contextMenuStripMainSongEdit.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).EndInit();
@@ -284,6 +293,7 @@ partial class Main
 
     private System.Windows.Forms.ContextMenuStrip contextMenuStripMainSongEdit;
     private System.Windows.Forms.ToolStripMenuItem toolStripMenuSongDelete;
+    private System.Windows.Forms.ToolStripMenuItem toolStripMenuSongAddToPlaylist;
 
     private System.Windows.Forms.Button btnMainNext;
     private System.Windows.Forms.Button btnMainPrev;
