@@ -2,11 +2,11 @@
 
 public interface ISongService
 {
-    Task<int> AddSong(string filePath);
+    Task<(int, int)> AddSong(string filePath);
 
     public string GetSongName(string fileName);
     
-    public void DeleteSong(string fileName);
+    public void DeleteSong(string fileName, string playlist);
     
     public string GetLyrics(string fileName);
 

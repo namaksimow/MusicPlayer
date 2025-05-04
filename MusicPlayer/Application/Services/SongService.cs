@@ -14,6 +14,8 @@ public class SongService : ISongService
     private readonly IPerformerRepository _performerRepository;
     private readonly IGenreSetRepository _genreSetRepository;
     private readonly IPerformerSetRepository _performerSetRepository;
+    private readonly ISongSetRepository _songSetRepository;
+    private readonly ISelectionRepository _selectionRepository;
 
     string CurrentSong { get; set; }
 
@@ -21,7 +23,8 @@ public class SongService : ISongService
         ILyricsService lyricsService, ITagService tagService, 
         ISongRepository songRepository, IGenreRepository genreRepository,
         IPerformerRepository performerRepository, IGenreSetRepository genreSetRepository,
-        IPerformerSetRepository performerSetRepository)
+        IPerformerSetRepository performerSetRepository,  ISongSetRepository songSetRepository,
+        ISelectionRepository selectionRepository)
     {
         _fileStorage = fileStorage;
         _durationService = durationService;
@@ -32,6 +35,8 @@ public class SongService : ISongService
         _performerRepository = performerRepository;
         _genreSetRepository = genreSetRepository;
         _performerSetRepository = performerSetRepository;
+        _songSetRepository = songSetRepository;
+        _selectionRepository = selectionRepository;
     }
     
     public void SetCurrentSong(string song)
@@ -61,7 +66,7 @@ public class SongService : ISongService
     /// Добавить трек
     /// </summary>
     /// <param name="filePath">Путь к треку в папке</param>
-    public async Task<int> AddSong(string filePath)
+    public async Task<(int, int)> AddSong(string filePath)
     {
         string fileName = Path.GetFileNameWithoutExtension(filePath);
         (string artist, string title) = ParseFileName(fileName);
@@ -89,28 +94,41 @@ public class SongService : ISongService
             
             await _performerSetRepository.Add(performerExist!.Id, song.Id);
             
-            return song.Id;
+            return (song.Id, duration);
         }
-        else
-        {
-            return -1;
-        }
+        
+        return (-1, 0);
     }
 
     /// <summary>
     /// Удалить трек
     /// </summary>
-    /// <param name="fileName"></param>
-    public void DeleteSong(string fileName)
+    /// <param name="fileName">Название песни</param>
+    /// <param name="playlist">Название плейлиста</param>
+    public void DeleteSong(string fileName, string playlist)
     {
         // Название трека без его расширения, по нему будем искать записи в БД
-        string title = GetSongTitle(Path.GetFileNameWithoutExtension(fileName)); 
-        
+        string title = GetSongTitle(Path.GetFileNameWithoutExtension(fileName));
+
         var song = _songRepository.Find(title);
-        _performerSetRepository.DeleteSongFromPerformer(song.Id);
-        _genreSetRepository.DeleteSongFromGenre(song.Id);
-        _songRepository.Delete(song.Id);
-        _fileStorage.DeleteFile(fileName);
+        var selectionId = _selectionRepository.GetSelectionId(playlist);
+        
+        if (playlist == "Downloaded")
+        {
+            _performerSetRepository.DeleteSongFromPerformer(song.Id);
+            _genreSetRepository.DeleteSongFromGenre(song.Id);
+            _songRepository.Delete(song.Id);
+            _fileStorage.DeleteFile(fileName);    
+            _songSetRepository.DeleteSongSetBySongId(song.Id);
+            _selectionRepository.ChangeSelectionDuration(selectionId, -song.Duration);
+        }
+        else
+        {
+            _songSetRepository.DeleteSongSetBySongIdSelectionId(song.Id, selectionId);
+            _selectionRepository.ChangeSelectionDuration(selectionId, -song.Duration);
+        }
+        
+        
     }
     
     /// <summary>

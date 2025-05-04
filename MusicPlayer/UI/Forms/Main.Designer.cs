@@ -52,6 +52,8 @@ partial class Main
         listBoxMainQueue = new System.Windows.Forms.ListBox();
         lblMainQueue = new System.Windows.Forms.Label();
         lblMainPlaylist = new System.Windows.Forms.Label();
+        btnMainGetStat = new System.Windows.Forms.Button();
+        btnMainFilter = new System.Windows.Forms.Button();
         contextMenuStripMainSongEdit.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBarMainVolume).BeginInit();
         ((System.ComponentModel.ISupportInitialize)trackBarMainRewind).BeginInit();
@@ -241,12 +243,32 @@ partial class Main
         lblMainPlaylist.Text = "Playlist";
         lblMainPlaylist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
+        // btnMainGetStat
+        // 
+        btnMainGetStat.Location = new System.Drawing.Point(821, 21);
+        btnMainGetStat.Name = "btnMainGetStat";
+        btnMainGetStat.Size = new System.Drawing.Size(76, 71);
+        btnMainGetStat.TabIndex = 23;
+        btnMainGetStat.Text = "Get Statistics";
+        btnMainGetStat.UseVisualStyleBackColor = true;
+        // 
+        // btnMainFilter
+        // 
+        btnMainFilter.Location = new System.Drawing.Point(336, 56);
+        btnMainFilter.Name = "btnMainFilter";
+        btnMainFilter.Size = new System.Drawing.Size(69, 27);
+        btnMainFilter.TabIndex = 24;
+        btnMainFilter.Text = "Filter";
+        btnMainFilter.UseVisualStyleBackColor = true;
+        // 
         // Main
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.SystemColors.Control;
         ClientSize = new System.Drawing.Size(909, 786);
+        Controls.Add(btnMainFilter);
+        Controls.Add(btnMainGetStat);
         Controls.Add(lblMainPlaylist);
         Controls.Add(lblMainQueue);
         Controls.Add(listBoxMainQueue);
@@ -271,6 +293,9 @@ partial class Main
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Button btnMainGetStat;
+    private System.Windows.Forms.Button btnMainFilter;
 
     private System.Windows.Forms.Label lblMainPlaylist;
 

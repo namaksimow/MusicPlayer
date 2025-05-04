@@ -4,6 +4,8 @@ namespace MusicPlayer.Domain.Interfaces;
 
 public interface ISelectionRepository
 {
+    public void ChangeSelectionDuration(int selectionId, int duration);
+    
     public List<string> GetAllSelections();
     
     public Selection GetSelection(string name);

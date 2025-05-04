@@ -16,13 +16,25 @@ public class PlaylistService : IPlaylistService
     private int IndexCurrentPlaylist { get; set; } = -1;
     private int IndexQueue { get; set; } = -1;
     
-    private List<string> CurrentPlaylist;
+    private string CurrentPlaylist { get; set; }
+    
+    private List<string> PlaylistSongs;
     
     public PlaylistService()
     {
         _outputDevice.PlaybackStopped += OnPlaybackStopped!;
     }
 
+    public string GetCurrentPlaylist()
+    {
+        return CurrentPlaylist;
+    }
+
+    public void SetCurrentPlaylist(string playlist)
+    {
+        CurrentPlaylist = playlist;
+    }
+    
     /// <summary>
     /// Получить плейлиста, который играет в очереди
     /// </summary>
@@ -45,18 +57,18 @@ public class PlaylistService : IPlaylistService
     /// Установить текущий играющий плейлист
     /// </summary>
     /// <param name="playlist"></param>
-    public void SetCurrentPlaylist(List<string> playlist)
+    public void SetPlaylistSongs(List<string> playlist)
     {
-        CurrentPlaylist = playlist;
+        PlaylistSongs = playlist;
     }
 
     /// <summary>
     /// Получить текущий играющий плейлист
     /// </summary>
     /// <returns></returns>
-    public List<string> GetCurrentPlaylist()
+    public List<string> GetPlaylistSongs()
     {
-        return CurrentPlaylist;
+        return PlaylistSongs;
     }
     
     /// <summary>

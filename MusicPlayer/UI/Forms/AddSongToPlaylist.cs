@@ -65,7 +65,9 @@ public partial class AddSongToPlaylist : Form
             int selectionId = _selectionRepository.GetSelectionId(playlist);
             (string artist, string title) = _songService.ParseFileName(songWithOutExtension);
             int songId = _songRepository.GetSongId(title);
+            int songDuration = _songRepository.GetSongDuration(title);
             
+            _selectionRepository.ChangeSelectionDuration(selectionId, songDuration);
             _songSetRepository.AddSongSet(selectionId, songId);
             Close();
         }

@@ -13,6 +13,12 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
+    public int GetSongDuration(string title)
+    {
+        var song = _context.Songs.FirstOrDefault(s => s.Title == title);
+        return song!.Duration;
+    }
+    
     /// <summary>
     /// Удалить песню
     /// </summary>

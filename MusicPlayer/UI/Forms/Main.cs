@@ -47,16 +47,10 @@ public partial class Main : Form
         
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
-            int songId = await _songService.AddSong(openFileDialog.FileName);
+            (int songId, int songDuration) = await _songService.AddSong(openFileDialog.FileName);
             string songName = _songService.GetSongName(openFileDialog.FileName);
-            /*int songId = _songRepository.GetSongId(songName);*/
-
-            if (songId == null)
-            {
-                Console.WriteLine("pipec");
-            }
             
-            _songSetRepository.AddSongToDownloadedPlaylist(songId);
+            _songSetRepository.AddSongToDownloadedPlaylist(songId, songDuration);
             int playlistId = _playlistService.GetCurrentPlaylistId();
             if (playlistId == 0)
             {
@@ -91,7 +85,7 @@ public partial class Main : Form
                 
                 string lyrics = _songService.GetLyrics(song); // текст песни
                 int currentSong = _playlistService.GetCurrentSongIndex(); // номер играющей песни
-                List<string> playlist = _playlistService.GetCurrentPlaylist(); // набор песен из плейлиста
+                List<string> playlist = _playlistService.GetPlaylistSongs(); // набор песен из плейлиста
                 int playlistIndex = _playlistService.GetCurrentPlaylistId(); // номер плейлиста
                 int currentQueueIndex = _playlistService.GetCurrentQueueIndex(); // номер играющей очереди
                 
@@ -155,7 +149,8 @@ public partial class Main : Form
     }
     
     /// <summary>
-    /// Удаление песни из плейлиста
+    /// Удаление песни из плейлиста, если песня в кастомном плейлисте, то должна удаляться только из него, а если из
+    /// Downloaded, то уже тогда из всех плейлистов и все записи с этой песней из БД
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -165,9 +160,12 @@ public partial class Main : Form
         if (index != -1)
         {
             string song = listBoxMainTracks.Items[index].ToString()!;
+            string playlist = _playlistService.GetCurrentPlaylist(); // плейлист, из которого мы удаляем трек
+
             _playlistService.DisposeWave();
-            _songService.DeleteSong(song);
+            _songService.DeleteSong(song, playlist);
             listBoxMainTracks.Items.Remove(song);
+            listBoxMainQueue.Items.Remove(song);
             textBoxMainLyrics.Text = "";
         }
     }
@@ -263,7 +261,10 @@ public partial class Main : Form
         AddPlaylist form = new AddPlaylist(_selectionRepository);
         form.ShowDialog();
         string playlist = form.GetPlaylistName();
-        listBoxMainPlaylists.Items.Add(playlist);
+        if (playlist != null)
+        {
+            listBoxMainPlaylists.Items.Add(playlist);    
+        }
     }
 
     /// <summary>
@@ -285,8 +286,9 @@ public partial class Main : Form
                 int selectionId = _selectionRepository.GetSelectionId(playlist);
                 List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId);
                 
-                _playlistService.SetCurrentPlaylist(songs);
+                _playlistService.SetPlaylistSongs(songs);
                 _playlistService.SetCurrentPlaylistId(index);
+                _playlistService.SetCurrentPlaylist(playlist);
                 listBoxMainTracks.Items.AddRange(songs.ToArray());
             } // Загрузка песен из плейлиста
             
@@ -322,7 +324,7 @@ public partial class Main : Form
             string playlist = listBoxMainPlaylists.Items[index].ToString()!;
             int selectionId = _selectionRepository.GetSelectionId(playlist);
             
-            _songSetRepository.DeleteSongSet(selectionId);
+            _songSetRepository.DeleteSongSetBySelectionId(selectionId);
             listBoxMainPlaylists.Items.Remove(playlist);
             _selectionRepository.DeleteSelection(playlist);
             _playlistService.SetCurrentPlaylistId(-1);

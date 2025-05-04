@@ -48,6 +48,6 @@ public partial class AddPlaylist : Form
         PlaylistName = playlistName;
         _selectionRepository.AddSelection(playlistName);
         MessageBox.Show("Playlist added");
-        Close();
+        Close();   
     }
 }

@@ -12,6 +12,13 @@ public class SelectionRepository : ISelectionRepository
     {
         _context = context;
     }
+
+    public void ChangeSelectionDuration(int selectionId, int duration)
+    {
+        var selection = _context.Selections.Find(selectionId);
+        selection!.Duration += duration;
+        _context.SaveChanges();
+    }
     
     /// <summary>
     /// Получить все плейлисты

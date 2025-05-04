@@ -2,7 +2,11 @@
 
 public interface IPlaylistService
 {    
-    public List<string> GetCurrentPlaylist();
+    public List<string> GetPlaylistSongs();
+
+    public string GetCurrentPlaylist();
+
+    public void SetCurrentPlaylist(string playlist);
     
     public void SetCurrentPlaylistId(int playlist);
     
@@ -18,7 +22,7 @@ public interface IPlaylistService
     
     public void ChangeCurrentSongIndex(int indexTrack, int indexQueue);
 
-    public void SetCurrentPlaylist(List<string> playlist);
+    public void SetPlaylistSongs(List<string> playlist);
 
     public void SetCurrentQueueIndex(int queue);
     
