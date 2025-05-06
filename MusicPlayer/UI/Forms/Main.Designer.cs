@@ -66,7 +66,7 @@ partial class Main
         btnMainUpload.Name = "btnMainUpload";
         btnMainUpload.Size = new System.Drawing.Size(76, 71);
         btnMainUpload.TabIndex = 7;
-        btnMainUpload.Text = "Upload Track";
+        btnMainUpload.Text = "Загрузить трек";
         btnMainUpload.UseVisualStyleBackColor = true;
         btnMainUpload.Click += btnMainUpload_Click;
         // 
@@ -133,17 +133,17 @@ partial class Main
         btnMainPlayPause.Name = "btnMainPlayPause";
         btnMainPlayPause.Size = new System.Drawing.Size(79, 55);
         btnMainPlayPause.TabIndex = 11;
-        btnMainPlayPause.Text = "Pause";
+        btnMainPlayPause.Text = "Пауза";
         btnMainPlayPause.UseVisualStyleBackColor = true;
         btnMainPlayPause.Click += btnMainPlayPause_Click;
         // 
         // btnMainNext
         // 
-        btnMainNext.Location = new System.Drawing.Point(538, 655);
+        btnMainNext.Location = new System.Drawing.Point(529, 655);
         btnMainNext.Name = "btnMainNext";
-        btnMainNext.Size = new System.Drawing.Size(79, 55);
+        btnMainNext.Size = new System.Drawing.Size(88, 55);
         btnMainNext.TabIndex = 12;
-        btnMainNext.Text = "Next";
+        btnMainNext.Text = "Следующий";
         btnMainNext.UseVisualStyleBackColor = true;
         btnMainNext.Click += btnMainNext_Click;
         // 
@@ -151,9 +151,9 @@ partial class Main
         // 
         btnMainPrev.Location = new System.Drawing.Point(288, 655);
         btnMainPrev.Name = "btnMainPrev";
-        btnMainPrev.Size = new System.Drawing.Size(79, 55);
+        btnMainPrev.Size = new System.Drawing.Size(97, 55);
         btnMainPrev.TabIndex = 13;
-        btnMainPrev.Text = "Prev";
+        btnMainPrev.Text = "Предыдущий";
         btnMainPrev.UseVisualStyleBackColor = true;
         btnMainPrev.Click += btnMainPrev_Click;
         // 
@@ -206,7 +206,7 @@ partial class Main
         btnMainAddPlaylist.Name = "btnMainAddPlaylist";
         btnMainAddPlaylist.Size = new System.Drawing.Size(76, 71);
         btnMainAddPlaylist.TabIndex = 19;
-        btnMainAddPlaylist.Text = "Add Playlist";
+        btnMainAddPlaylist.Text = "Добавить плейлист";
         btnMainAddPlaylist.UseVisualStyleBackColor = true;
         btnMainAddPlaylist.Click += btnMainAddPlaylist_Click;
         // 
@@ -226,21 +226,21 @@ partial class Main
         // lblMainQueue
         // 
         lblMainQueue.Font = new System.Drawing.Font("Segoe UI", 18F);
-        lblMainQueue.Location = new System.Drawing.Point(422, 27);
+        lblMainQueue.Location = new System.Drawing.Point(422, 13);
         lblMainQueue.Name = "lblMainQueue";
         lblMainQueue.Size = new System.Drawing.Size(195, 49);
         lblMainQueue.TabIndex = 21;
-        lblMainQueue.Text = "Queue";
+        lblMainQueue.Text = "Очередь песен";
         lblMainQueue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // lblMainPlaylist
         // 
         lblMainPlaylist.Font = new System.Drawing.Font("Segoe UI", 18F);
-        lblMainPlaylist.Location = new System.Drawing.Point(173, 27);
+        lblMainPlaylist.Location = new System.Drawing.Point(173, 13);
         lblMainPlaylist.Name = "lblMainPlaylist";
         lblMainPlaylist.Size = new System.Drawing.Size(232, 49);
         lblMainPlaylist.TabIndex = 22;
-        lblMainPlaylist.Text = "Playlist";
+        lblMainPlaylist.Text = "Плейлист";
         lblMainPlaylist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // btnMainGetStat
@@ -249,16 +249,16 @@ partial class Main
         btnMainGetStat.Name = "btnMainGetStat";
         btnMainGetStat.Size = new System.Drawing.Size(76, 71);
         btnMainGetStat.TabIndex = 23;
-        btnMainGetStat.Text = "Get Statistics";
+        btnMainGetStat.Text = "Статистика";
         btnMainGetStat.UseVisualStyleBackColor = true;
         // 
         // btnMainFilter
         // 
-        btnMainFilter.Location = new System.Drawing.Point(336, 56);
+        btnMainFilter.Location = new System.Drawing.Point(336, 65);
         btnMainFilter.Name = "btnMainFilter";
         btnMainFilter.Size = new System.Drawing.Size(69, 27);
         btnMainFilter.TabIndex = 24;
-        btnMainFilter.Text = "Filter";
+        btnMainFilter.Text = "Фильтры";
         btnMainFilter.UseVisualStyleBackColor = true;
         btnMainFilter.Click += btnMainFilter_Click;
         // 

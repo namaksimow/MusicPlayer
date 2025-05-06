@@ -265,7 +265,8 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void btnMainAddPlaylist_Click(object sender, EventArgs e)
     {
-        AddPlaylist form = new AddPlaylist(_selectionRepository);
+        AddPlaylist form = new AddPlaylist(_selectionRepository, _joinRepository, _songSetRepository, _genreRepository,
+            _performerRepository);
         form.ShowDialog();
         string playlist = form.GetPlaylistName();
         if (playlist != null)

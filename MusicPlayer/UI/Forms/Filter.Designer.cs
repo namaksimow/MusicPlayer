@@ -148,9 +148,9 @@ partial class Filter
         // 
         // lblFilterByPerformerDescending
         // 
-        lblFilterByPerformerDescending.Location = new System.Drawing.Point(269, 676);
+        lblFilterByPerformerDescending.Location = new System.Drawing.Point(269, 672);
         lblFilterByPerformerDescending.Name = "lblFilterByPerformerDescending";
-        lblFilterByPerformerDescending.Size = new System.Drawing.Size(190, 74);
+        lblFilterByPerformerDescending.Size = new System.Drawing.Size(179, 74);
         lblFilterByPerformerDescending.TabIndex = 9;
         lblFilterByPerformerDescending.Text = "По исполнителью в обратном алфавитном порядку";
         lblFilterByPerformerDescending.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
