@@ -13,6 +13,12 @@ public class SongRepository : ISongRepository
         _context = context;
     }
 
+    public int GetSongDuration(string title)
+    {
+        var song = _context.Songs.FirstOrDefault(s => s.Title == title);
+        return song!.Duration;
+    }
+    
     /// <summary>
     /// Удалить песню
     /// </summary>
@@ -52,5 +58,11 @@ public class SongRepository : ISongRepository
     public bool Contains(string title)
     {
         return _context.Songs.Any(s => s.UpperTitle == title.ToUpper());
+    }
+
+    public int GetSongId(string title)
+    {
+        var song = _context.Songs.FirstOrDefault(s => s.Title == title);
+        return song!.Id;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MusicPlayer.Domain.Interfaces;
+using MusicPlayer.Domain.Models;
 using NAudio.Wave;
 
 namespace MusicPlayer.Application.Services;
@@ -8,8 +9,67 @@ public class PlaylistService : IPlaylistService
     private const string Path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
 
     private readonly WaveOutEvent _outputDevice = new();
+    
     private AudioFileReader? _audioFile;
-    private int _dispIndex = -1;
+    
+    private int _currentSongIndex = -1;
+    private int IndexCurrentPlaylist { get; set; } = -1;
+    private int IndexQueue { get; set; } = -1;
+    
+    private string CurrentPlaylist { get; set; }
+    
+    private List<string> PlaylistSongs;
+    
+    public PlaylistService()
+    {
+        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
+    }
+
+    public string GetCurrentPlaylist()
+    {
+        return CurrentPlaylist;
+    }
+
+    public void SetCurrentPlaylist(string playlist)
+    {
+        CurrentPlaylist = playlist;
+    }
+    
+    /// <summary>
+    /// Получить плейлиста, который играет в очереди
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrentQueueIndex()
+    {
+        return IndexQueue;
+    }
+    
+    /// <summary>
+    /// Установить текущую играющую очередь
+    /// </summary>
+    /// <param name="queue"></param>
+    public void SetCurrentQueueIndex(int queue)
+    {
+        IndexQueue = queue;
+    }
+    
+    /// <summary>
+    /// Установить текущий играющий плейлист
+    /// </summary>
+    /// <param name="playlist"></param>
+    public void SetPlaylistSongs(List<string> playlist)
+    {
+        PlaylistSongs = playlist;
+    }
+
+    /// <summary>
+    /// Получить текущий играющий плейлист
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetPlaylistSongs()
+    {
+        return PlaylistSongs;
+    }
     
     /// <summary>
     /// Обработка при остановке трека. Трек может остановиться 
@@ -24,17 +84,30 @@ public class PlaylistService : IPlaylistService
             _outputDevice.Play();
         }
     }
-    
-    public PlaylistService()
+
+    /// <summary>
+    /// Установить номер последнего открытого плейлиста
+    /// </summary>
+    /// <param name="playlist"></param>
+    public void SetCurrentPlaylistId(int playlist)
     {
-        _outputDevice.PlaybackStopped += OnPlaybackStopped!;
+        IndexCurrentPlaylist = playlist;
     }
-    
+
+    /// <summary>
+    /// Получить текущий номер открытого плейлиста
+    /// </summary>
+    /// <returns></returns>
+    public int GetCurrentPlaylistId()
+    {
+        return IndexCurrentPlaylist;
+    }
+
     /// <summary>
     /// Получить список треков в папке
     /// </summary>
     /// <returns></returns>
-    public List<string> LoadPlaylist()
+    public List<string> LoadUploadTracks()
     {
         DirectoryInfo dinfo = new DirectoryInfo(Path);
         FileInfo[] files = dinfo.GetFiles("*.mp3");
@@ -76,7 +149,7 @@ public class PlaylistService : IPlaylistService
     /// </summary>
     public void PauseResume()
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return;
         }
@@ -117,19 +190,28 @@ public class PlaylistService : IPlaylistService
     /// <summary>
     /// Изменить номер текущей песни, которая играет
     /// </summary>
-    /// <param name="newDisplayIndex">Индекс в listBox новой песни</param>
-    public void ChangeDisplayIndex(int newDisplayIndex)
+    /// <param name="indexTrack">Индекс в listBoxTrack новой песни</param>
+    /// <param name="indexQueue">Индекс в listBoxQueue новой песни</param>
+    public void ChangeCurrentSongIndex(int indexTrack, int indexQueue)
     {
-        _dispIndex = newDisplayIndex;
+        // Так как песню мы можем выбрать как из загруженного плейлиста, так и из загруженной очереди
+        if (indexTrack == -1)
+        {
+            _currentSongIndex = indexQueue;    
+        }
+        else
+        {
+            _currentSongIndex = indexTrack;    
+        }
     }
 
     /// <summary>
     /// Получить индекс песни, которая сейчас играет
     /// </summary>
     /// <returns>Индекс текущего трека</returns>
-    public int GetDisplayIndex()
+    public int GetCurrentSongIndex()
     {
-        return _dispIndex;
+        return _currentSongIndex;
     }
 
     /// <summary>
@@ -139,20 +221,20 @@ public class PlaylistService : IPlaylistService
     /// <returns>Индекс текущего трека</returns>
     public int NextTrack(int listBoxCount)
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return -1;
         }
         
-        _dispIndex += 1;
+        _currentSongIndex += 1;
         
-        if (_dispIndex == listBoxCount)
+        if (_currentSongIndex == listBoxCount)
         {
-            _dispIndex = 0;
-            return _dispIndex;
+            _currentSongIndex = 0;
+            return _currentSongIndex;
         }
         
-        return _dispIndex;
+        return _currentSongIndex;
     }
 
     /// <summary>
@@ -162,19 +244,19 @@ public class PlaylistService : IPlaylistService
     /// <returns>Индекс текущего трека</returns>
     public int PreviousTrack(int listBoxCount)
     {
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
             return - 1;
         }
         
-        _dispIndex -= 1;
+        _currentSongIndex -= 1;
         
-        if (_dispIndex == -1)
+        if (_currentSongIndex == -1)
         {
-            _dispIndex = listBoxCount - 1;
-            return _dispIndex;
+            _currentSongIndex = listBoxCount - 1;
+            return _currentSongIndex;
         }
         
-        return _dispIndex;
+        return _currentSongIndex;
     }
 }

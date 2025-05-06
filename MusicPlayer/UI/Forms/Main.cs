@@ -6,15 +6,42 @@ public partial class Main : Form
 {
     private readonly ISongService _songService;
     private readonly IPlaylistService _playlistService;
+    private readonly IJoinRepository _joinRepository;
+    private readonly ISelectionRepository _selectionRepository;
+    private readonly ISongSetRepository _songSetRepository;
+    private readonly ISongRepository _songRepository;
+    private readonly IGenreRepository _genreRepository;
+    private readonly IPerformerRepository _performerRepository;
+
+    private string _song;
+
+    private bool isFiltered = false;
     
-    public Main(ISongService songService, IPlaylistService playlistService)
+    public Main(ISongService songService, IPlaylistService playlistService, IJoinRepository joinRepository,
+        ISelectionRepository selectionRepository, ISongSetRepository songSetRepository,
+        ISongRepository songRepository,  IGenreRepository genreRepository,  IPerformerRepository performerRepository)
     {
         _songService = songService;
         _playlistService = playlistService;
+        _joinRepository = joinRepository;
+        _selectionRepository = selectionRepository;
+        _songSetRepository = songSetRepository;
+        _songRepository = songRepository;
+        _genreRepository = genreRepository;
+        _performerRepository = performerRepository;
         InitializeComponent();
-        LoadPlaylist();
+        LoadAllPlaylist();
     }
 
+    /// <summary>
+    /// Загрузить все плейлисты
+    /// </summary>
+    private void LoadAllPlaylist()
+    {
+        List<string> playlist = _selectionRepository.GetAllSelections();
+        listBoxMainPlaylists.Items.AddRange(playlist.ToArray());
+    }
+    
     /// <summary>
     /// Добавить песню в плейлист
     /// </summary>
@@ -26,9 +53,15 @@ public partial class Main : Form
         
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
-            await _songService.AddSong(openFileDialog.FileName);
+            (int songId, int songDuration) = await _songService.AddSong(openFileDialog.FileName);
             string songName = _songService.GetSongName(openFileDialog.FileName);
-            listBoxMainPlaylist.Items.Add(songName);
+            
+            _songSetRepository.AddSongToDownloadedPlaylist(songId, songDuration);
+            int playlistId = _playlistService.GetCurrentPlaylistId();
+            if (playlistId == 0)
+            {
+                listBoxMainTracks.Items.Add(songName);    
+            }
         }
     }
     
@@ -37,74 +70,123 @@ public partial class Main : Form
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void listBoxMain_MouseDown(object sender, MouseEventArgs e)
+    private void listBoxTracksOrQueue_MouseDown(object sender, MouseEventArgs e)
     {
-        int index = listBoxMainPlaylist.IndexFromPoint(e.Location);
+        int indexTrack = listBoxMainTracks.IndexFromPoint(e.Location);
+        int indexQueue = listBoxMainQueue.IndexFromPoint(e.Location);
 
-        if (index != -1)
+        if (indexTrack != -1 || indexQueue != -1)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left) // Выбрать песню для прослушивания
             {
-                string song = listBoxMainPlaylist.Items[index].ToString()!;
-                string lyrics = _songService.GetLyrics(song);
-                int displayIndex = _playlistService.GetDisplayIndex();
-                
-                if (displayIndex == -1)
+                string song;
+                if (indexTrack != -1)
                 {
+                    song = listBoxMainTracks.Items[indexTrack].ToString()!;    
+                }
+                else
+                {
+                    song = listBoxMainQueue.Items[indexQueue].ToString()!;
+                }
+                
+                string lyrics = _songService.GetLyrics(song); // текст песни
+                int currentSong = _playlistService.GetCurrentSongIndex(); // номер играющей песни
+                List<string> playlist = listBoxMainTracks.Items.Cast<string>().ToList(); // набор песен из плейлиста
+                int playlistIndex = _playlistService.GetCurrentPlaylistId(); // номер плейлиста
+                int currentQueueIndex = _playlistService.GetCurrentQueueIndex(); // номер играющей очереди
+                
+                if (currentSong == -1) // песни ещё не выбирались
+                {
+                    _songService.SetCurrentSong(song);
                     _playlistService.PlayTrack(song);
                     textBoxMainLyrics.Text = lyrics;
-                    _playlistService.ChangeDisplayIndex(index);
+                    _playlistService.ChangeCurrentSongIndex(indexTrack, indexQueue);
+                    _playlistService.SetCurrentQueueIndex(playlistIndex);
+                    listBoxMainQueue.Items.AddRange(playlist.ToArray());
                 }
-            
-                else if (displayIndex == index) // Тот же трек
+                
+                else if (currentQueueIndex != playlistIndex && indexTrack != -1 || isFiltered) // Трек из другого плейлиста
                 {
-                    _playlistService.PauseResume();
-                }
-                else // Другой трек
-                {
+                    _songService.SetCurrentSong(song);
                     _playlistService.DisposeWave();
                     _playlistService.PlayTrack(song);
                     textBoxMainLyrics.Text = lyrics;
-                    _playlistService.ChangeDisplayIndex(index);
+                    _playlistService.ChangeCurrentSongIndex(indexTrack, indexQueue);
+                    _playlistService.SetCurrentQueueIndex(playlistIndex);
+                    listBoxMainQueue.Items.Clear();
+                    listBoxMainQueue.Items.AddRange(playlist.ToArray());
+                    isFiltered = false;
+                }
+                
+                else if (currentSong == indexTrack || currentSong == indexQueue)
+                // Тот же трек из того же плейлиста или очереди
+                {
+                    _playlistService.PauseResume();
+                }
+                else  // Другой трек из той же очереди
+                {
+                    _songService.SetCurrentSong(song);
+                    _playlistService.DisposeWave();
+                    _playlistService.PlayTrack(song);
+                    textBoxMainLyrics.Text = lyrics;
+                    _playlistService.ChangeCurrentSongIndex(indexTrack, indexQueue);
+                    _playlistService.SetCurrentQueueIndex(playlistIndex);
                 }
             }
             
             else if (e.Button == MouseButtons.Right)
             {
-                listBoxMainPlaylist.ContextMenuStrip = contextMenuStripMain;
+                listBoxMainTracks.ContextMenuStrip = contextMenuStripMainSongEdit;
+                string song;
+                if (indexTrack != -1)
+                {
+                    song = listBoxMainTracks.Items[indexTrack].ToString()!;    
+                }
+                else
+                {
+                    song = listBoxMainQueue.Items[indexQueue].ToString()!;
+                }
+                _song = song;
             }
         }
-        else
+        else // Контекстное меню для взаимодействия с песней
         {
-            listBoxMainPlaylist.ContextMenuStrip = null;
+            listBoxMainTracks.ContextMenuStrip = null;
         }
     }
     
     /// <summary>
-    /// Удаление песни из плейлиста
+    /// Удаление песни из плейлиста, если песня в кастомном плейлисте, то должна удаляться только из него, а если из
+    /// Downloaded, то уже тогда из всех плейлистов и все записи с этой песней из БД
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void ToolStripMenuDelete_Click(object sender, EventArgs e)
+    private void ToolStripMenuSongDeleteClick(object sender, EventArgs e)
     {
-        int index = listBoxMainPlaylist.SelectedIndex;
+        int index = listBoxMainTracks.SelectedIndex;
         if (index != -1)
         {
-            string song = listBoxMainPlaylist.Items[index].ToString()!;
+            string song = listBoxMainTracks.Items[index].ToString()!;
+            string playlist = _playlistService.GetCurrentPlaylist(); // плейлист, из которого мы удаляем трек
+
             _playlistService.DisposeWave();
-            _songService.DeleteSong(song);
-            listBoxMainPlaylist.Items.Remove(song);
+            _songService.DeleteSong(song, playlist);
+            listBoxMainTracks.Items.Remove(song);
+            listBoxMainQueue.Items.Remove(song);
             textBoxMainLyrics.Text = "";
         }
     }
-    
+
     /// <summary>
-    /// Загрузка песен из папки
+    /// Добавить песню в плейлист
     /// </summary>
-    private void LoadPlaylist()
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ToolStripMenuSongAddToPlaylistClick(object sender, EventArgs e)
     {
-        List<string> songs = _playlistService.LoadPlaylist();
-        listBoxMainPlaylist.Items.AddRange(songs.ToArray());
+        AddSongToPlaylist form = new AddSongToPlaylist(_song, _selectionRepository, _songService, _songSetRepository,
+            _songRepository);
+        form.ShowDialog();
     }
     
     /// <summary>
@@ -145,11 +227,12 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void btnMainNext_Click(object sender, EventArgs e)
     {
-        int displayIndex = _playlistService.NextTrack(listBoxMainPlaylist.Items.Count);
+        int displayIndex = _playlistService.NextTrack(listBoxMainQueue.Items.Count);
         if (displayIndex != -1)
         {
-            string song = listBoxMainPlaylist.Items[displayIndex].ToString()!;
+            string song = listBoxMainQueue.Items[displayIndex].ToString()!;
             string lyrics = _songService.GetLyrics(song);
+            _songService.SetCurrentSong(song);
             _playlistService.DisposeWave();
             _playlistService.PlayTrack(song);
             textBoxMainLyrics.Text = lyrics;
@@ -163,14 +246,119 @@ public partial class Main : Form
     /// <param name="e"></param>
     private void btnMainPrev_Click(object sender, EventArgs e)
     {
-        int displayIndex = _playlistService.PreviousTrack(listBoxMainPlaylist.Items.Count);
+        int displayIndex = _playlistService.PreviousTrack(listBoxMainQueue.Items.Count);
         if (displayIndex != -1)
         {
-            string song = listBoxMainPlaylist.Items[displayIndex].ToString()!;
+            string song = listBoxMainQueue.Items[displayIndex].ToString()!;
             string lyrics = _songService.GetLyrics(song);
+            _songService.SetCurrentSong(song);
             _playlistService.DisposeWave();
             _playlistService.PlayTrack(song);    
             textBoxMainLyrics.Text = lyrics;
+        }
+    }
+
+    /// <summary>
+    /// Добавить плейлист
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btnMainAddPlaylist_Click(object sender, EventArgs e)
+    {
+        AddPlaylist form = new AddPlaylist(_selectionRepository, _joinRepository, _songSetRepository, _genreRepository,
+            _performerRepository);
+        form.ShowDialog();
+        string playlist = form.GetPlaylistName();
+        if (playlist != null)
+        {
+            listBoxMainPlaylists.Items.Add(playlist);    
+        }
+    }
+
+    /// <summary>
+    /// Обработка действий с плейлистами
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void listBoxMainPlaylists_MouseDown(object sender, MouseEventArgs e)
+    {
+        int index = listBoxMainPlaylists.IndexFromPoint(e.Location);
+
+        if (index != -1)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                listBoxMainTracks.Items.Clear();
+                
+                string playlist = listBoxMainPlaylists.Items[index].ToString()!;
+                int selectionId = _selectionRepository.GetSelectionId(playlist);
+                List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId);
+                
+                _playlistService.SetPlaylistSongs(songs);
+                _playlistService.SetCurrentPlaylistId(index);
+                _playlistService.SetCurrentPlaylist(playlist);
+                listBoxMainTracks.Items.AddRange(songs.ToArray());
+            } // Загрузка песен из плейлиста
+            
+            else if (e.Button == MouseButtons.Right)
+            {
+                listBoxMainPlaylists.ContextMenuStrip = contextMenuStripMainPlaylistEdit;
+            } // Контекстное меню для взаимодействия с плейлистом
+        }
+        else 
+        {
+            listBoxMainPlaylists.ContextMenuStrip = null;
+        } // если курсор не на плейлисте, то не нужно вызывать меню
+    }
+
+    /// <summary>
+    /// Удаление плейлиста
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void ToolStripMenuPlaylistDeleteClick(object sender, EventArgs e)
+    {
+        int index = listBoxMainPlaylists.SelectedIndex;
+        if (index != -1)
+        {
+            int currentPlaylist = _playlistService.GetCurrentPlaylistId();
+
+            if (currentPlaylist == index)
+            {
+                _playlistService.DisposeWave();
+                listBoxMainTracks.Items.Clear();
+            }
+            
+            string playlist = listBoxMainPlaylists.Items[index].ToString()!;
+            int selectionId = _selectionRepository.GetSelectionId(playlist);
+            
+            _songSetRepository.DeleteSongSetBySelectionId(selectionId);
+            listBoxMainPlaylists.Items.Remove(playlist);
+            _selectionRepository.DeleteSelection(playlist);
+            _playlistService.SetCurrentPlaylistId(-1);
+        }
+    }
+
+    private void btnMainFilter_Click(object sender, EventArgs e)
+    {
+        bool playlistOpen = listBoxMainTracks.Items.Count > 0;
+        List<string> songs = listBoxMainTracks.Items.Cast<string>().ToList();
+        
+        if (playlistOpen)
+        {
+            Filter form = new Filter(_playlistService.GetCurrentPlaylist(), songs, _selectionRepository,
+                _joinRepository, _genreRepository, _performerRepository);
+            form.ShowDialog();
+            
+            List<string> filteredSongs = form.GetFilterSongs();
+            
+            isFiltered = true;
+            listBoxMainTracks.Items.Clear();
+            listBoxMainTracks.Items.AddRange(filteredSongs.ToArray());
+        }
+        else
+        {
+            MessageBox.Show(@"Нельзя применить фильтры к пустому плейлисту");   
         }
     }
 }

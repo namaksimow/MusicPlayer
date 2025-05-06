@@ -1,8 +1,14 @@
 ﻿namespace MusicPlayer.Domain.Interfaces;
 
 public interface IPlaylistService
-{
-    public List<string> LoadPlaylist();
+{    
+    public List<string> GetPlaylistSongs();
+
+    public string GetCurrentPlaylist();
+
+    public void SetCurrentPlaylist(string playlist);
+    
+    public void SetCurrentPlaylistId(int playlist);
     
     public void PlayTrack(string songToPlay);
 
@@ -14,11 +20,19 @@ public interface IPlaylistService
 
     public void Rewind(int trackBarValue);
     
-    public void ChangeDisplayIndex(int newDisplayIndex);
+    public void ChangeCurrentSongIndex(int indexTrack, int indexQueue);
 
-    public int GetDisplayIndex();
+    public void SetPlaylistSongs(List<string> playlist);
+
+    public void SetCurrentQueueIndex(int queue);
+    
+    public int GetCurrentQueueIndex();
+    
+    public int GetCurrentSongIndex();
     
     public int NextTrack(int listBoxCount);
     
     public int PreviousTrack(int listBoxCount);
+    
+    public int GetCurrentPlaylistId();
 }

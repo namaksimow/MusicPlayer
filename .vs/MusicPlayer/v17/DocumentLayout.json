@@ -1,0 +1,63 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\notSystem\\vcs\\MusicPlayer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3C89CD39-5E6B-484B-BF80-2812DD606DD8}|MusicPlayer\\MusicPlayer.csproj|c:\\notsystem\\vcs\\musicplayer\\musicplayer\\dbcontext.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
+      "RelativeMoniker": "D:0:0:{3C89CD39-5E6B-484B-BF80-2812DD606DD8}|MusicPlayer\\MusicPlayer.csproj|solutionrelative:musicplayer\\dbcontext.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3C89CD39-5E6B-484B-BF80-2812DD606DD8}|MusicPlayer\\MusicPlayer.csproj|c:\\notsystem\\vcs\\musicplayer\\musicplayer\\domain\\models\\userset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3C89CD39-5E6B-484B-BF80-2812DD606DD8}|MusicPlayer\\MusicPlayer.csproj|solutionrelative:musicplayer\\domain\\models\\userset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserSet.cs",
+              "DocumentMoniker": "C:\\notSystem\\vcs\\MusicPlayer\\MusicPlayer\\Domain\\Models\\UserSet.cs",
+              "RelativeDocumentMoniker": "MusicPlayer\\Domain\\Models\\UserSet.cs",
+              "ToolTip": "C:\\notSystem\\vcs\\MusicPlayer\\MusicPlayer\\Domain\\Models\\UserSet.cs",
+              "RelativeToolTip": "MusicPlayer\\Domain\\Models\\UserSet.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-02T13:27:04.143Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "dbContext.cd",
+              "DocumentMoniker": "C:\\notSystem\\vcs\\MusicPlayer\\MusicPlayer\\dbContext.cd",
+              "RelativeDocumentMoniker": "MusicPlayer\\dbContext.cd",
+              "ToolTip": "C:\\notSystem\\vcs\\MusicPlayer\\MusicPlayer\\dbContext.cd",
+              "RelativeToolTip": "MusicPlayer\\dbContext.cd",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
+              "WhenOpened": "2025-05-02T13:26:49.684Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

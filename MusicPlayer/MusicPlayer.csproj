@@ -25,6 +25,15 @@
       <Compile Update="UI\Forms\Main.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\Forms\AddPlaylist.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\Forms\AddSongToPlaylist.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\Forms\Filter.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

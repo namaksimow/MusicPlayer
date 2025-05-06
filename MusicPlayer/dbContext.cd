@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MusicPlayer.Domain.Models.Genre">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\Genre.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.GenreSet">
+    <Position X="6.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\GenreSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.Performer">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\Performer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.PerformerSet">
+    <Position X="3.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\PerformerSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.Selection">
+    <Position X="5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\Selection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.Song">
+    <Position X="6.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAUAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\Song.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.SongSet">
+    <Position X="3.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\SongSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.User">
+    <Position X="1.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAAAQAAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MusicPlayer.Domain.Models.UserSet">
+    <Position X="1.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Domain\Models\UserSet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
