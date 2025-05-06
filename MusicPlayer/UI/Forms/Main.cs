@@ -10,12 +10,16 @@ public partial class Main : Form
     private readonly ISelectionRepository _selectionRepository;
     private readonly ISongSetRepository _songSetRepository;
     private readonly ISongRepository _songRepository;
+    private readonly IGenreRepository _genreRepository;
+    private readonly IPerformerRepository _performerRepository;
 
     private string _song;
+
+    private bool isFiltered = false;
     
     public Main(ISongService songService, IPlaylistService playlistService, IJoinRepository joinRepository,
         ISelectionRepository selectionRepository, ISongSetRepository songSetRepository,
-        ISongRepository songRepository)
+        ISongRepository songRepository,  IGenreRepository genreRepository,  IPerformerRepository performerRepository)
     {
         _songService = songService;
         _playlistService = playlistService;
@@ -23,6 +27,8 @@ public partial class Main : Form
         _selectionRepository = selectionRepository;
         _songSetRepository = songSetRepository;
         _songRepository = songRepository;
+        _genreRepository = genreRepository;
+        _performerRepository = performerRepository;
         InitializeComponent();
         LoadAllPlaylist();
     }
@@ -85,7 +91,7 @@ public partial class Main : Form
                 
                 string lyrics = _songService.GetLyrics(song); // текст песни
                 int currentSong = _playlistService.GetCurrentSongIndex(); // номер играющей песни
-                List<string> playlist = _playlistService.GetPlaylistSongs(); // набор песен из плейлиста
+                List<string> playlist = listBoxMainTracks.Items.Cast<string>().ToList(); // набор песен из плейлиста
                 int playlistIndex = _playlistService.GetCurrentPlaylistId(); // номер плейлиста
                 int currentQueueIndex = _playlistService.GetCurrentQueueIndex(); // номер играющей очереди
                 
@@ -99,7 +105,7 @@ public partial class Main : Form
                     listBoxMainQueue.Items.AddRange(playlist.ToArray());
                 }
                 
-                else if (currentQueueIndex != playlistIndex && indexTrack != -1) // Трек из другого плейлиста
+                else if (currentQueueIndex != playlistIndex && indexTrack != -1 || isFiltered) // Трек из другого плейлиста
                 {
                     _songService.SetCurrentSong(song);
                     _playlistService.DisposeWave();
@@ -109,6 +115,7 @@ public partial class Main : Form
                     _playlistService.SetCurrentQueueIndex(playlistIndex);
                     listBoxMainQueue.Items.Clear();
                     listBoxMainQueue.Items.AddRange(playlist.ToArray());
+                    isFiltered = false;
                 }
                 
                 else if (currentSong == indexTrack || currentSong == indexQueue)
@@ -328,6 +335,29 @@ public partial class Main : Form
             listBoxMainPlaylists.Items.Remove(playlist);
             _selectionRepository.DeleteSelection(playlist);
             _playlistService.SetCurrentPlaylistId(-1);
+        }
+    }
+
+    private void btnMainFilter_Click(object sender, EventArgs e)
+    {
+        bool playlistOpen = listBoxMainTracks.Items.Count > 0;
+        List<string> songs = listBoxMainTracks.Items.Cast<string>().ToList();
+        
+        if (playlistOpen)
+        {
+            Filter form = new Filter(_playlistService.GetCurrentPlaylist(), songs, _selectionRepository,
+                _joinRepository, _genreRepository, _performerRepository);
+            form.ShowDialog();
+            
+            List<string> filteredSongs = form.GetFilterSongs();
+            
+            isFiltered = true;
+            listBoxMainTracks.Items.Clear();
+            listBoxMainTracks.Items.AddRange(filteredSongs.ToArray());
+        }
+        else
+        {
+            MessageBox.Show(@"Нельзя применить фильтры к пустому плейлисту");   
         }
     }
 }

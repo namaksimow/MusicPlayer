@@ -260,6 +260,7 @@ partial class Main
         btnMainFilter.TabIndex = 24;
         btnMainFilter.Text = "Filter";
         btnMainFilter.UseVisualStyleBackColor = true;
+        btnMainFilter.Click += btnMainFilter_Click;
         // 
         // Main
         // 

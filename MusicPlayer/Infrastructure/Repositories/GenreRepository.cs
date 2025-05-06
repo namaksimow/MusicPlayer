@@ -13,6 +13,11 @@ public class GenreRepository : IGenreRepository
         _context = context;
     }
 
+    public List<string> GetAllGenres()
+    {
+        return _context.Genres.Select(genre => genre.Name).ToList()!;
+    }
+    
     /// <summary>
     /// Добавить жанр\жанры
     /// </summary>

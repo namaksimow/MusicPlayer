@@ -13,6 +13,11 @@ public class PerformerRepository : IPerformerRepository
         _context = context;
     }
 
+    public List<string> GetPerformers()
+    {
+        return _context.Performers.Select(p => p.Name).ToList()!;
+    }
+    
     /// <summary>
     /// Добавить исполнителя
     /// </summary>
