@@ -1,4 +1,5 @@
-﻿using MusicPlayer.Domain.Interfaces;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using MusicPlayer.Domain.Interfaces;
 
 namespace MusicPlayer.UI.Forms;
 
@@ -15,11 +16,14 @@ public partial class Main : Form
 
     private string _song;
 
-    private bool isFiltered = false;
+    private bool _isFiltered = false;
+
+    private readonly int _userId; 
     
     public Main(ISongService songService, IPlaylistService playlistService, IJoinRepository joinRepository,
         ISelectionRepository selectionRepository, ISongSetRepository songSetRepository,
-        ISongRepository songRepository,  IGenreRepository genreRepository,  IPerformerRepository performerRepository)
+        ISongRepository songRepository,  IGenreRepository genreRepository,  IPerformerRepository performerRepository,
+        IUserService userService)
     {
         _songService = songService;
         _playlistService = playlistService;
@@ -29,6 +33,7 @@ public partial class Main : Form
         _songRepository = songRepository;
         _genreRepository = genreRepository;
         _performerRepository = performerRepository;
+        _userId = userService.GetId();
         InitializeComponent();
         LoadAllPlaylist();
     }
@@ -38,7 +43,7 @@ public partial class Main : Form
     /// </summary>
     private void LoadAllPlaylist()
     {
-        List<string> playlist = _selectionRepository.GetAllSelections();
+        List<string> playlist = _selectionRepository.GetAllSelections(_userId);
         listBoxMainPlaylists.Items.AddRange(playlist.ToArray());
     }
     
@@ -53,10 +58,18 @@ public partial class Main : Form
         
         if (openFileDialog.ShowDialog() == DialogResult.OK)
         {
-            (int songId, int songDuration) = await _songService.AddSong(openFileDialog.FileName);
-            string songName = _songService.GetSongName(openFileDialog.FileName);
+            (int songId, int songDuration) = await _songService.AddSong(openFileDialog.FileName, _userId);
+
+            if (songId == -1)
+            {
+                MessageBox.Show(@$"У вас уже добавлена эта песня");
+                return;
+            }
             
-            _songSetRepository.AddSongToDownloadedPlaylist(songId, songDuration);
+            string songName = _songService.GetSongName(openFileDialog.FileName);
+
+            int downloadedId = _selectionRepository.GetSelectionId("Загруженные", _userId);
+            _songSetRepository.AddSongToDownloadedPlaylist(songId, songDuration, downloadedId);
             int playlistId = _playlistService.GetCurrentPlaylistId();
             if (playlistId == 0)
             {
@@ -105,7 +118,7 @@ public partial class Main : Form
                     listBoxMainQueue.Items.AddRange(playlist.ToArray());
                 }
                 
-                else if (currentQueueIndex != playlistIndex && indexTrack != -1 || isFiltered) // Трек из другого плейлиста
+                else if (currentQueueIndex != playlistIndex && indexTrack != -1 || _isFiltered) // Трек из другого плейлиста
                 {
                     _songService.SetCurrentSong(song);
                     _playlistService.DisposeWave();
@@ -115,7 +128,7 @@ public partial class Main : Form
                     _playlistService.SetCurrentQueueIndex(playlistIndex);
                     listBoxMainQueue.Items.Clear();
                     listBoxMainQueue.Items.AddRange(playlist.ToArray());
-                    isFiltered = false;
+                    _isFiltered = false;
                 }
                 
                 else if (currentSong == indexTrack || currentSong == indexQueue)
@@ -170,7 +183,7 @@ public partial class Main : Form
             string playlist = _playlistService.GetCurrentPlaylist(); // плейлист, из которого мы удаляем трек
 
             _playlistService.DisposeWave();
-            _songService.DeleteSong(song, playlist);
+            _songService.DeleteSong(song, playlist, _userId);
             listBoxMainTracks.Items.Remove(song);
             listBoxMainQueue.Items.Remove(song);
             textBoxMainLyrics.Text = "";
@@ -185,7 +198,7 @@ public partial class Main : Form
     private void ToolStripMenuSongAddToPlaylistClick(object sender, EventArgs e)
     {
         AddSongToPlaylist form = new AddSongToPlaylist(_song, _selectionRepository, _songService, _songSetRepository,
-            _songRepository);
+            _songRepository, _userId);
         form.ShowDialog();
     }
     
@@ -266,7 +279,7 @@ public partial class Main : Form
     private void btnMainAddPlaylist_Click(object sender, EventArgs e)
     {
         AddPlaylist form = new AddPlaylist(_selectionRepository, _joinRepository, _songSetRepository, _genreRepository,
-            _performerRepository);
+            _performerRepository, _userId);
         form.ShowDialog();
         string playlist = form.GetPlaylistName();
         if (playlist != null)
@@ -291,8 +304,8 @@ public partial class Main : Form
                 listBoxMainTracks.Items.Clear();
                 
                 string playlist = listBoxMainPlaylists.Items[index].ToString()!;
-                int selectionId = _selectionRepository.GetSelectionId(playlist);
-                List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId);
+                int selectionId = _selectionRepository.GetSelectionId(playlist, _userId);
+                List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId, _userId);
                 
                 _playlistService.SetPlaylistSongs(songs);
                 _playlistService.SetCurrentPlaylistId(index);
@@ -330,7 +343,7 @@ public partial class Main : Form
             }
             
             string playlist = listBoxMainPlaylists.Items[index].ToString()!;
-            int selectionId = _selectionRepository.GetSelectionId(playlist);
+            int selectionId = _selectionRepository.GetSelectionId(playlist, _userId);
             
             _songSetRepository.DeleteSongSetBySelectionId(selectionId);
             listBoxMainPlaylists.Items.Remove(playlist);
@@ -347,12 +360,12 @@ public partial class Main : Form
         if (playlistOpen)
         {
             Filter form = new Filter(_playlistService.GetCurrentPlaylist(), songs, _selectionRepository,
-                _joinRepository, _genreRepository, _performerRepository);
+                _joinRepository, _genreRepository, _performerRepository, _userId);
             form.ShowDialog();
             
             List<string> filteredSongs = form.GetFilterSongs();
             
-            isFiltered = true;
+            _isFiltered = true;
             listBoxMainTracks.Items.Clear();
             listBoxMainTracks.Items.AddRange(filteredSongs.ToArray());
         }

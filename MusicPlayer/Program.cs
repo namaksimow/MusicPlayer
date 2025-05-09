@@ -5,7 +5,7 @@ using MusicPlayer.Application.Services;
 using MusicPlayer.Domain.Interfaces;
 using MusicPlayer.Infrastructure.Repositories;
 using MusicPlayer.UI.Forms;
-using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
+using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;  
 
 namespace MusicPlayer;
 
@@ -22,8 +22,14 @@ static class Program
         var services = ConfigureServices();
         using var serviceProvider = services.BuildServiceProvider();
             
-        var main = serviceProvider.GetRequiredService<Main>();
-        System.Windows.Forms.Application.Run(main);
+        var regAndAuth = serviceProvider.GetService<RegAndAuth>();
+        var result = regAndAuth.ShowDialog();
+
+        if (result == DialogResult.OK)
+        {
+            var main = serviceProvider.GetRequiredService<Main>();
+            System.Windows.Forms.Application.Run(main);    
+        }
     }
     
     private static IServiceCollection ConfigureServices()
@@ -32,7 +38,8 @@ static class Program
         
         services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql("UserId=postgres;Password=aASDnqn1k_02;Host=localhost;Port=5434;Database=MusicSelection;"));
-
+        
+        services.AddScoped<RegAndAuth>();
         services.AddScoped<ISongService, SongService>();
         services.AddSingleton<GeniusClient>(provider =>
         {
@@ -52,6 +59,9 @@ static class Program
         services.AddScoped<ISelectionRepository, SelectionRepository>();
         services.AddScoped<IJoinRepository, JoinRepository>();
         services.AddScoped<ISongSetRepository, SongSetRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserSetsRepository, UserSetsRepository>();
         services.AddScoped<Main>();
 
         return services;

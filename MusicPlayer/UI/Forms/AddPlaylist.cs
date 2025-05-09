@@ -12,15 +12,18 @@ public partial class AddPlaylist : Form
     
     private string PlaylistName { get; set; }
     
+    private readonly int _userId;
+    
     public AddPlaylist(ISelectionRepository selectionRepository, IJoinRepository joinRepository, 
         ISongSetRepository songSetRepository, IGenreRepository genreRepository,
-        IPerformerRepository performerRepository)
+        IPerformerRepository performerRepository, int userId)
     {
         _selectionRepository = selectionRepository;
         _joinRepository = joinRepository;
         _songSetRepository = songSetRepository;
         _genreRepository = genreRepository;
         _performerRepository = performerRepository;
+        _userId = userId;
         InitializeComponent();
         LoadPerformers();
         LoadGenres();
@@ -28,13 +31,13 @@ public partial class AddPlaylist : Form
 
     private void LoadPerformers()
     {
-        List<string> performers = _performerRepository.GetPerformers();
+        List<string> performers = _joinRepository.GetPerformersByUserId(_userId);
         listBoxAPPickPerformer.Items.AddRange(performers.ToArray());
     }
     
     private void LoadGenres()
     {
-        List<string> genres = _genreRepository.GetAllGenres();
+        List<string> genres = _joinRepository.GetGenresByUserId(_userId);
         listBoxAPPickGenre.Items.AddRange(genres.ToArray());
     }
     
@@ -71,8 +74,8 @@ public partial class AddPlaylist : Form
         int durationTo = int.Parse(textBoxAPDurationTo.Text);
         int countPickedGenres = listBoxAPPickedGenre.Items.Count;
         int countPickedPerformers = listBoxAPPickedPerformer.Items.Count;
-        int selectionId = 2; // айди плейлиста со всеми загруженными песнями у каждого пользователя
-        List<int> songs = null; // список, в котором будут находиться айди будущих песен для плейлиста
+        int selectionId = 2; 
+        List<int> songs; 
         
         if (countPickedGenres == 0 && countPickedPerformers == 0)
         {
@@ -178,16 +181,25 @@ public partial class AddPlaylist : Form
                     performers);
             }
         }
-        
+
+        List<int> durations = _joinRepository.GetSongDurationBySongTitle(songs);
         PlaylistName = playlistName;
         _selectionRepository.AddSelection(playlistName);
-        int newSelectionId = _selectionRepository.GetSelectionId(playlistName);
+        int newSelectionId = _selectionRepository.GetSelectionId(playlistName, _userId);
         if (songs != null)
         {
             foreach (int songId in songs)
             {
                 _songSetRepository.AddSongSet(newSelectionId, songId);
             }    
+        }
+
+        if (durations != null)
+        {
+            foreach (int duration in durations)
+            {
+                _selectionRepository.ChangeSelectionDuration(newSelectionId, duration);
+            }
         }
         MessageBox.Show(@"Плейлист добавлен");
         Close();   

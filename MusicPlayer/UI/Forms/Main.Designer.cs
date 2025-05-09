@@ -64,7 +64,7 @@ partial class Main
         // 
         btnMainUpload.Location = new System.Drawing.Point(632, 21);
         btnMainUpload.Name = "btnMainUpload";
-        btnMainUpload.Size = new System.Drawing.Size(76, 71);
+        btnMainUpload.Size = new System.Drawing.Size(109, 71);
         btnMainUpload.TabIndex = 7;
         btnMainUpload.Text = "Загрузить трек";
         btnMainUpload.UseVisualStyleBackColor = true;

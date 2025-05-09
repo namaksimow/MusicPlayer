@@ -10,5 +10,5 @@ public interface ISongSetRepository
     
     public void AddSongSet(int selectionId, int songId);
 
-    public void AddSongToDownloadedPlaylist(int songId, int songDuration ,int selectionId = 2);
+    public void AddSongToDownloadedPlaylist(int songId, int songDuration ,int selectionId);
 }
