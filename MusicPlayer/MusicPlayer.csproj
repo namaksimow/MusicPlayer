@@ -34,6 +34,12 @@
       <Compile Update="UI\Forms\Filter.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\Forms\RegAndAuth.cs">
+        <SubType>Form</SubType>
+      </Compile>
+      <Compile Update="UI\Forms\Registration.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

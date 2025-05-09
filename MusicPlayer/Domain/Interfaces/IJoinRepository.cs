@@ -2,6 +2,16 @@
 
 public interface IJoinRepository
 {
+    public List<int> GetSongDurationBySongTitle(List<int> songs);
+    
+    public List<string> GetGenresByUserId(int userId);
+    
+    public List<string> GetPerformersByUserId(int userId);
+    
+    public int GetCountSameSong(int songId);
+    
+    public bool IsUserHaveSongByPerformer(int userId, string songsTitle, string performerName);
+    
     public List<int> GetSongsIdByGenrePerformerListDurationFromAndTo(
         int selectionId, int minDuration,
         int maxDuration, List<string> genres,
@@ -92,5 +102,5 @@ public interface IJoinRepository
     
     public List<string> GetSongsByPerformerAscending(int selectionId);
     
-    List<string> GetSongsBySelectionId(int selectionId);
+    List<string> GetSongsBySelectionId(int selectionId, int userId);
 }

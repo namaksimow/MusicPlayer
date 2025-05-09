@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using Microsoft.VisualBasic.ApplicationServices;
 using MusicPlayer.Domain.Interfaces;
 
 namespace MusicPlayer.UI.Forms;
@@ -12,9 +13,12 @@ public partial class Filter : Form
     private readonly IPerformerRepository _performerRepository;
     
     private List<string> _songs;
+
+    private readonly int _userId;
     
     public Filter(string currentSelection, List<string> songs, ISelectionRepository selectionRepository, 
-        IJoinRepository joinRepository,  IGenreRepository genreRepository, IPerformerRepository performerRepository)
+        IJoinRepository joinRepository,  IGenreRepository genreRepository, IPerformerRepository performerRepository,
+        int userId)
     {
         _currentSelection = currentSelection;
         _selectionRepository = selectionRepository;
@@ -22,6 +26,7 @@ public partial class Filter : Form
         _genreRepository = genreRepository;
         _performerRepository = performerRepository;
         _songs = songs;
+        _userId =  userId;
         InitializeComponent();
         LoadGenres();
         LoadPerformers();
@@ -29,13 +34,13 @@ public partial class Filter : Form
 
     private void LoadPerformers()
     {
-        List<string> performers = _performerRepository.GetPerformers();
+        List<string> performers = _joinRepository.GetPerformersByUserId(_userId);
         listBoxFilterPickPerformer.Items.AddRange(performers.ToArray());
     }
     
     private void LoadGenres()
     {
-        List<string> genres = _genreRepository.GetAllGenres();
+        List<string> genres = _joinRepository.GetGenresByUserId(_userId);
         listBoxFilterPickGenre.Items.AddRange(genres.ToArray());
     }
     
@@ -58,15 +63,15 @@ public partial class Filter : Form
 
     private void lblFilterClearFilter_Click(object sender, EventArgs e)
     {
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
-        List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
+        List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId, _userId);
         _songs = songs;
         Close();
     }
 
     private void lblFilterByPerformerAscending_Click(object sender, EventArgs e)
     {
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
         List<string> songs = _joinRepository.GetSongsByPerformerAscending(selectionId);
         _songs = songs;
         Close();
@@ -74,7 +79,7 @@ public partial class Filter : Form
 
     private void lblFilterByPerformerDescending_Click(object sender, EventArgs e)
     {
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
         List<string> songs = _joinRepository.GetSongsByPerformerDescending(selectionId);
         _songs = songs;
         Close();
@@ -82,7 +87,7 @@ public partial class Filter : Form
 
     private void lblFilterByDurationAscending_Click(object sender, EventArgs e)
     {
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
         List<string> songs = _joinRepository.GetSongsByDurationAscending(selectionId);
         _songs = songs;
         Close();
@@ -91,7 +96,7 @@ public partial class Filter : Form
 
     private void lblFilterByDurationDescending_Click(object sender, EventArgs e)
     {
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
         List<string> songs = _joinRepository.GetSongsByDurationDescending(selectionId);
         _songs = songs;
         Close();
@@ -152,14 +157,14 @@ public partial class Filter : Form
         int durationTo = int.Parse(textBoxFilterDurationTo.Text); // максимальная длительность песни
         int countPickedGenres = listBoxFilterPickedGenre.Items.Count; // количество выбранных жанров
         int countPickedPerformers = listBoxFilterPickedPerformer.Items.Count; // количество выбранных исполнителей
-        int selectionId = _selectionRepository.GetSelectionId(_currentSelection);
+        int selectionId = _selectionRepository.GetSelectionId(_currentSelection, _userId);
         
         if (countPickedGenres == 0 && countPickedPerformers == 0) // фильтруем только по длительности
         {
             if (durationFrom == 0 && durationTo == 0) // всё равно на длительность песен, то есть по сути этот блок это
             // плейлист без фильтров
             {
-                List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId);
+                List<string> songs = _joinRepository.GetSongsBySelectionId(selectionId, _userId);
                 _songs = songs;
                 Close();
             }

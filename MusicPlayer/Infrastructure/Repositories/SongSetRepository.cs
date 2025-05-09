@@ -53,7 +53,7 @@ public class SongSetRepository :  ISongSetRepository
         _context.SaveChanges();
     }
 
-    public void AddSongToDownloadedPlaylist(int songId, int songDuration ,int selectionId = 2)
+    public void AddSongToDownloadedPlaylist(int songId, int songDuration , int selectionId)
     {
         SongSet songSet = new SongSet(selectionId, songId);
         _selectionRepository.ChangeSelectionDuration(selectionId, songDuration);

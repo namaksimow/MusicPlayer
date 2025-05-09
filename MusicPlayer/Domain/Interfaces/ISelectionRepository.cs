@@ -6,11 +6,11 @@ public interface ISelectionRepository
 {
     public void ChangeSelectionDuration(int selectionId, int duration);
     
-    public List<string> GetAllSelections();
-    
+    public List<string> GetAllSelections(int userId);
+
     public Selection GetSelection(string name);
 
-    public int GetSelectionId(string name);
+    public int GetSelectionId(string name, int userId);
 
     public void DeleteSelection(string name);
 

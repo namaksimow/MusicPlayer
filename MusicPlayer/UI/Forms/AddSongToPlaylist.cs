@@ -10,22 +10,25 @@ public partial class AddSongToPlaylist : Form
     private readonly ISongService _songService;
 
     private string _song;
+
+    private readonly int _userId;
     
     public AddSongToPlaylist(string song, ISelectionRepository selectionRepository, ISongService songService,
-        ISongSetRepository songSetRepository, ISongRepository songRepository)
+        ISongSetRepository songSetRepository, ISongRepository songRepository, int userId)
     {
         _song = song;
         _songService = songService;
         _selectionRepository = selectionRepository;
         _songSetRepository = songSetRepository;
         _songRepository = songRepository;
+        _userId = userId;
         InitializeComponent();
         LoadPlaylist();
     }
 
     private void LoadPlaylist()
     {
-        List<string> playlists = _selectionRepository.GetAllSelections();
+        List<string> playlists = _selectionRepository.GetAllSelections(_userId);
         listBoxASTPPlaylistPick.Items.AddRange(playlists.ToArray());
     }
 
@@ -62,7 +65,7 @@ public partial class AddSongToPlaylist : Form
             string song = _song;
             
             string songWithOutExtension = song.Substring(0, song.Length - 4);
-            int selectionId = _selectionRepository.GetSelectionId(playlist);
+            int selectionId = _selectionRepository.GetSelectionId(playlist, _userId);
             (string artist, string title) = _songService.ParseFileName(songWithOutExtension);
             int songId = _songRepository.GetSongId(title);
             int songDuration = _songRepository.GetSongDuration(title);
