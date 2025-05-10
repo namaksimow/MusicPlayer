@@ -13,6 +13,7 @@ public partial class Main : Form
     private readonly ISongRepository _songRepository;
     private readonly IGenreRepository _genreRepository;
     private readonly IPerformerRepository _performerRepository;
+    private readonly IStatisticsRepository _statisticsRepository;
 
     private string _song;
 
@@ -23,7 +24,7 @@ public partial class Main : Form
     public Main(ISongService songService, IPlaylistService playlistService, IJoinRepository joinRepository,
         ISelectionRepository selectionRepository, ISongSetRepository songSetRepository,
         ISongRepository songRepository,  IGenreRepository genreRepository,  IPerformerRepository performerRepository,
-        IUserService userService)
+        IUserService userService, IStatisticsRepository statisticsRepository)
     {
         _songService = songService;
         _playlistService = playlistService;
@@ -34,6 +35,7 @@ public partial class Main : Form
         _genreRepository = genreRepository;
         _performerRepository = performerRepository;
         _userId = userService.GetId();
+        _statisticsRepository = statisticsRepository;
         InitializeComponent();
         LoadAllPlaylist();
     }
@@ -107,10 +109,14 @@ public partial class Main : Form
                 List<string> playlist = listBoxMainTracks.Items.Cast<string>().ToList(); // набор песен из плейлиста
                 int playlistIndex = _playlistService.GetCurrentPlaylistId(); // номер плейлиста
                 int currentQueueIndex = _playlistService.GetCurrentQueueIndex(); // номер играющей очереди
+                DateTime timeNow = DateTime.Now;
+                
+                string songTitle = _songService.GetSongTitle(Path.GetFileNameWithoutExtension(song));
                 
                 if (currentSong == -1) // песни ещё не выбирались
                 {
                     _songService.SetCurrentSong(song);
+                    _statisticsRepository.Add(_userId, songTitle, timeNow);
                     _playlistService.PlayTrack(song);
                     textBoxMainLyrics.Text = lyrics;
                     _playlistService.ChangeCurrentSongIndex(indexTrack, indexQueue);
@@ -121,6 +127,7 @@ public partial class Main : Form
                 else if (currentQueueIndex != playlistIndex && indexTrack != -1 || _isFiltered) // Трек из другого плейлиста
                 {
                     _songService.SetCurrentSong(song);
+                    _statisticsRepository.Add(_userId, songTitle, timeNow);
                     _playlistService.DisposeWave();
                     _playlistService.PlayTrack(song);
                     textBoxMainLyrics.Text = lyrics;
@@ -139,6 +146,7 @@ public partial class Main : Form
                 else  // Другой трек из той же очереди
                 {
                     _songService.SetCurrentSong(song);
+                    _statisticsRepository.Add(_userId, songTitle, timeNow);
                     _playlistService.DisposeWave();
                     _playlistService.PlayTrack(song);
                     textBoxMainLyrics.Text = lyrics;
@@ -373,5 +381,11 @@ public partial class Main : Form
         {
             MessageBox.Show(@"Нельзя применить фильтры к пустому плейлисту");   
         }
+    }
+
+    private void btnMainGetStat_Click(object sender, EventArgs e)
+    {
+        GetStatistics form = new GetStatistics(_userId, _joinRepository);
+        form.ShowDialog();
     }
 }

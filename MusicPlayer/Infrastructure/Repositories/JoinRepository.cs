@@ -1,4 +1,6 @@
-﻿using MusicPlayer.Domain.Interfaces;
+﻿using System.Runtime.InteropServices.JavaScript;
+using MusicPlayer.Domain.Interfaces;
+using MusicPlayer.Domain.Models;
 using ApplicationContext = MusicPlayer.Infrastructure.Data.ApplicationContext;
 
 namespace MusicPlayer.Infrastructure.Repositories;
@@ -11,7 +13,29 @@ public class JoinRepository : IJoinRepository
     {
         _context = context;
     }
-
+    
+    public List<SongDate> GetStatisticsByUserId(int userId)
+    {
+        var result = (
+            from statistic in _context.Statistics
+            join songs in  _context.Songs on statistic.SongId equals songs.Id
+            join performerSet  in _context.PerformerSets on songs.Id equals performerSet.SongId
+            join performer in _context.Performers on performerSet.PerformerId equals performer.Id
+            join songSet in _context.SongSets on songs.Id equals songSet.SongId
+            join selection in _context.Selections on songSet.SelectionId equals selection.Id
+            where statistic.UserId == userId && selection.UserId == userId
+            select new SongDate()
+            {
+                SongTitle = songs.Title,
+                PerformerName = performer.Name,
+                PlaylistName = selection.Name,
+                Date = statistic.Date,
+            }
+            ).ToList();
+        
+        return result;
+    }
+    
     public List<int> GetSongDurationBySongTitle(List<int> songs)
     {
         var result = (

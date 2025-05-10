@@ -14,6 +14,7 @@ public class ApplicationContext : DbContext
     public DbSet<PerformerSet> PerformerSets { get; set; }
     public DbSet<Genre> Genres { get; set; }
     public DbSet<GenreSet> GenreSets { get; set; }
+    public DbSet<Statistics> Statistics { get; set; } 
     
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)

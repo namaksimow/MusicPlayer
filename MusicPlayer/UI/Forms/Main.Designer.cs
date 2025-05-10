@@ -251,6 +251,7 @@ partial class Main
         btnMainGetStat.TabIndex = 23;
         btnMainGetStat.Text = "Статистика";
         btnMainGetStat.UseVisualStyleBackColor = true;
+        btnMainGetStat.Click += btnMainGetStat_Click;
         // 
         // btnMainFilter
         // 
