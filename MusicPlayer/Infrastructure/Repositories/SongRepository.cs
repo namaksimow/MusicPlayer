@@ -65,6 +65,4 @@ public class SongRepository : ISongRepository
         var song = _context.Songs.FirstOrDefault(s => s.Title == title);
         return song!.Id;
     }
-    
-    
 }

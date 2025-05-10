@@ -62,6 +62,7 @@ static class Program
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserSetsRepository, UserSetsRepository>();
+        services.AddScoped<IStatisticsRepository, StatisticsRepository>();
         services.AddScoped<Main>();
 
         return services;

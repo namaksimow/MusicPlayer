@@ -40,6 +40,9 @@
       <Compile Update="UI\Forms\Registration.cs">
         <SubType>Form</SubType>
       </Compile>
+      <Compile Update="UI\Forms\GetStatistics.cs">
+        <SubType>Form</SubType>
+      </Compile>
     </ItemGroup>
 
 </Project>

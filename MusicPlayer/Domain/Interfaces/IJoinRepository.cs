@@ -1,7 +1,11 @@
-﻿namespace MusicPlayer.Domain.Interfaces;
+﻿using MusicPlayer.Domain.Models;
+
+namespace MusicPlayer.Domain.Interfaces;
 
 public interface IJoinRepository
 {
+    public List<SongDate> GetStatisticsByUserId(int userId);
+    
     public List<int> GetSongDurationBySongTitle(List<int> songs);
     
     public List<string> GetGenresByUserId(int userId);
