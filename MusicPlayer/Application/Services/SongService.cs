@@ -141,9 +141,9 @@ public class SongService : ISongService
 
             if (countSameSong == 1)
             {
-                _fileStorage.DeleteFile(fileName);    
+                /*_fileStorage.DeleteFile(fileName);    
                 _performerSetRepository.DeleteSongFromPerformer(song.Id);
-                _genreSetRepository.DeleteSongFromGenre(song.Id);
+                _genreSetRepository.DeleteSongFromGenre(song.Id);*/
                 _songSetRepository.DeleteSongSetBySongId(song.Id);
                 _selectionRepository.ChangeSelectionDuration(selectionId, -song.Duration);
                 _userSetsRepository.DeleteUserSet(userId, song.Id);

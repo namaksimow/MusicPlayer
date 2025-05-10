@@ -10,6 +10,8 @@ public partial class RegAndAuth : Form
     private readonly IUserRepository _userRepository;
     private readonly IUserService _userService;
     private readonly ISelectionRepository _selectionRepository;
+
+    public int Role;
     
     public RegAndAuth(IUserRepository userRepository,  IUserService userService,  ISelectionRepository selectionRepository)
     {
@@ -62,9 +64,11 @@ public partial class RegAndAuth : Form
             MessageBox.Show(@"Неверный логин или пароль");
             return;
         }
-        
+
+        int userRole = _userRepository.GetUserRole(login);
         int userId = _userRepository.GetId(login);
         _userService.SetId(userId);
+        Role = userRole;
         
         DialogResult = DialogResult.OK;
         Close();
