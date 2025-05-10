@@ -93,21 +93,21 @@ partial class Main
         // 
         toolStripMenuSongDelete.Name = "toolStripMenuSongDelete";
         toolStripMenuSongDelete.Size = new System.Drawing.Size(151, 22);
-        toolStripMenuSongDelete.Text = "Delete";
+        toolStripMenuSongDelete.Text = "Удалить";
         toolStripMenuSongDelete.Click += ToolStripMenuSongDeleteClick;
         // 
         // toolStripMenuSongAddToPlaylist
         // 
         toolStripMenuSongAddToPlaylist.Name = "toolStripMenuSongAddToPlaylist";
         toolStripMenuSongAddToPlaylist.Size = new System.Drawing.Size(151, 22);
-        toolStripMenuSongAddToPlaylist.Text = "Add To Playlist";
+        toolStripMenuSongAddToPlaylist.Text = "Добавить в плейлист...";
         toolStripMenuSongAddToPlaylist.Click += ToolStripMenuSongAddToPlaylistClick;
         // 
         // toolStripMenuItemPlaylistDelete
         // 
         toolStripMenuItemPlaylistDelete.Name = "toolStripMenuItemPlaylistDelete";
         toolStripMenuItemPlaylistDelete.Size = new System.Drawing.Size(107, 22);
-        toolStripMenuItemPlaylistDelete.Text = "Delete";
+        toolStripMenuItemPlaylistDelete.Text = "Удалить";
         toolStripMenuItemPlaylistDelete.Click += ToolStripMenuPlaylistDeleteClick;
         // 
         // trackBarMainVolume

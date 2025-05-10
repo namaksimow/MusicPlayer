@@ -49,7 +49,7 @@ public partial class Registration : Form
         
         string passwordHash = GetPasswordHash(password);
         
-        _userRepository.Add(login, password, passwordHash);
+        _userRepository.Add(login, password, passwordHash, 0);
         int userId = _userRepository.GetId(login);
         _selectionRepository.AddSelection("Загруженные", userId);
         Close();

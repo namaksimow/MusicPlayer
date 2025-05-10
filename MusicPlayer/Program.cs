@@ -24,11 +24,17 @@ static class Program
             
         var regAndAuth = serviceProvider.GetService<RegAndAuth>();
         var result = regAndAuth.ShowDialog();
-
-        if (result == DialogResult.OK)
+        int role = regAndAuth.Role;
+        
+        if (result == DialogResult.OK && role == 0)
         {
             var main = serviceProvider.GetRequiredService<Main>();
             System.Windows.Forms.Application.Run(main);    
+        }
+        else
+        {
+            var admin = serviceProvider.GetRequiredService<Admin>();
+            System.Windows.Forms.Application.Run(admin);
         }
     }
     
@@ -38,7 +44,8 @@ static class Program
         
         services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql("UserId=postgres;Password=aASDnqn1k_02;Host=localhost;Port=5434;Database=MusicSelection;"));
-        
+
+        services.AddScoped<Admin>();
         services.AddScoped<RegAndAuth>();
         services.AddScoped<ISongService, SongService>();
         services.AddSingleton<GeniusClient>(provider =>

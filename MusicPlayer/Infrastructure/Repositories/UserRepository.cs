@@ -8,16 +8,19 @@ public class UserRepository : IUserRepository
 {
     private readonly ApplicationContext _context;
 
-    private int currentUserId { get; set; }
-
     public UserRepository(ApplicationContext context)
     {
         _context = context;
     }
 
-    public int GetCurrentUserId()
+    public List<string> GetUsersName()
     {
-        return currentUserId;
+        return _context.Users.Where(u => u.IsAdmin == 0).Select(u => u.Name).ToList();
+    }
+    
+    public int GetUserRole(string login)
+    {
+        return _context.Users.FirstOrDefault(u => u.Name == login)!.IsAdmin;
     }
     
     public int GetId(string login)
@@ -26,9 +29,9 @@ public class UserRepository : IUserRepository
         return user!.Id;
     }
     
-    public void Add(string name, string password, string passwordHash)
+    public void Add(string name, string password, string passwordHash, int isAdmin)
     {
-        User user = new User(name, password, passwordHash);
+        User user = new User(name, password, passwordHash, isAdmin);
         _context.Users.Add(user);
         _context.SaveChanges();
     }

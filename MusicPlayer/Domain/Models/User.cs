@@ -12,11 +12,14 @@ public class User
 
     public string? PasswordHash { get; set; }
     
-    public User(string name, string password, string passwordHash)
+    public int IsAdmin { get; set; }
+    
+    public User(string name, string password, string passwordHash, int isAdmin)
     {
         Name = name;
         NormalizedName = name.ToUpper();
         Password = password;
         PasswordHash = passwordHash;
+        IsAdmin = isAdmin;
     }
 }
