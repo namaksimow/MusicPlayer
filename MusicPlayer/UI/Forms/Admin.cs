@@ -9,7 +9,7 @@ public partial class Admin : Form
     private readonly IJoinRepository _joinRepository;
     private readonly IUserRepository _userRepository;
         
-    private readonly string FilePath = "C:\\notSystem\\vcs\\MusicPlayer\\MusicPlayer";
+    private readonly string FilePath = "C:\\notSystem\\vcs\\MusicPlayer2";
     private readonly string FileName = "Statistics.xlsx";
     
     public Admin(IJoinRepository joinRepository,  IUserRepository userRepository)

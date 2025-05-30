@@ -46,7 +46,7 @@ partial class GetStatistics
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        ClientSize = new System.Drawing.Size(800, 450);
+        ClientSize = new System.Drawing.Size(568, 450);
         Controls.Add(dgvGetStatistics);
         Text = "GetStatistics";
         ((System.ComponentModel.ISupportInitialize)dgvGetStatistics).EndInit();

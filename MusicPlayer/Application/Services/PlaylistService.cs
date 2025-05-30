@@ -6,7 +6,7 @@ namespace MusicPlayer.Application.Services;
 
 public class PlaylistService : IPlaylistService
 {
-    private const string Path = @"C:\notSystem\vcs\MusicPlayer\MusicPlayer\Tracks";
+    private const string Path = @"C:\notSystem\vcs\MusicPlayer2\MusicPlayer\Tracks";
 
     private readonly WaveOutEvent _outputDevice = new();
     

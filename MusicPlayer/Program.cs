@@ -31,7 +31,7 @@ static class Program
             var main = serviceProvider.GetRequiredService<Main>();
             System.Windows.Forms.Application.Run(main);    
         }
-        else
+        else if (role == 1)
         {
             var admin = serviceProvider.GetRequiredService<Admin>();
             System.Windows.Forms.Application.Run(admin);
@@ -43,7 +43,7 @@ static class Program
         var services = new ServiceCollection();
         
         services.AddDbContext<ApplicationContext>(options =>
-            options.UseNpgsql("UserId=postgres;Password=aASDnqn1k_02;Host=localhost;Port=5434;Database=MusicSelection;"));
+            options.UseNpgsql(":)"));
 
         services.AddScoped<Admin>();
         services.AddScoped<RegAndAuth>();
